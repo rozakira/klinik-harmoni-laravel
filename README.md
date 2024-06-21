@@ -6,7 +6,7 @@
 ## Tentang Laravel
 
 Proyek Sistem Informasi Klinik untuk membantu klinik dalam pencatatan pasien.
-![alt text](image-1.png)
+
 - [Mesin routing yang sederhana dan cepat](https://laravel.com/docs/routing).
 - [Kontainer injeksi dependensi yang kuat](https://laravel.com/docs/container).
 - Banyak back-end untuk penyimpanan [sesi](https://laravel.com/docs/session) dan [cache](https://laravel.com/docs/cache).
