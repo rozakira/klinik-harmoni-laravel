@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\UserRequest;
-use App\Models\User;
+use App\Http\Requests\Dokter\DokterRequest;
+use App\Models\Dokter;
 use Illuminate\Http\Request;
 
-class AdminController extends Controller
+class AdminDokterController extends Controller
 {
   /**
    * Display a listing of the resource.
@@ -16,11 +16,11 @@ class AdminController extends Controller
    */
   public function index()
   {
-    $user = User::all();
+    $dokter = Dokter::all();
     $data = [
-      'users' => $user
+      'dokters' => $dokter
     ];
-    return view('admin.pasien.index', $data);
+    return view('admin.dokter.index', $data);
   }
 
   /**
@@ -30,7 +30,7 @@ class AdminController extends Controller
    */
   public function create()
   {
-    return view('admin.pasien.create');
+    return view('admin.dokter.create');
   }
 
   /**
@@ -39,22 +39,20 @@ class AdminController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(UserRequest $request)
+  public function store(DokterRequest $request)
   {
     $validatedData = $request->all();
-    $validatedData['password'] = bcrypt('password');
-    $validatedData['password_confirmation'] = bcrypt('password');
-    User::create($validatedData);
-    return redirect()->route('admin.index');
+    $dokter = Dokter::create($validatedData);
+    return redirect()->route('admin-dokter.index');
   }
 
   /**
    * Display the specified resource.
    *
-   * @param  \App\Models\User  $user
+   * @param  \App\Models\Dokter  $dokter
    * @return \Illuminate\Http\Response
    */
-  public function show(User $user)
+  public function show(Dokter $admin_dokter)
   {
     //
   }
@@ -62,43 +60,40 @@ class AdminController extends Controller
   /**
    * Show the form for editing the specified resource.
    *
-   * @param  \App\Models\User  $user
+   * @param  \App\Models\Dokter  $dokter
    * @return \Illuminate\Http\Response
    */
-  public function edit(User $user, $id)
+  public function edit(Dokter $admin_dokter)
   {
-    $users = User::find($id);
     $data = [
-      'user' => $users
+      'dokter' => $admin_dokter
     ];
-    return view('admin.pasien.edit', $data);
+    return view('admin.dokter.edit', $data);
   }
 
   /**
    * Update the specified resource in storage.
    *
    * @param  \Illuminate\Http\Request  $request
-   * @param  \App\Models\User  $user
+   * @param  \App\Models\Dokter  $dokter
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function update(Request $request, Dokter $admin_dokter)
   {
     $validatedData = $request->all();
-    $user = User::find($id);
-    $validatedData['role'] = $request->role;
-    $user->update($validatedData);
-    return redirect()->route('admin.index');
+    $admin_dokter->update($validatedData);
+    return redirect()->route('admin-dokter.index');
   }
 
   /**
    * Remove the specified resource from storage.
    *
-   * @param  \App\Models\User  $user
+   * @param  \App\Models\Dokter  $dokter
    * @return \Illuminate\Http\Response
    */
-  public function destroy(User $admin)
+  public function destroy(Dokter $admin_dokter)
   {
-    $admin->delete();
-    return redirect()->route('admin.index');
+    $admin_dokter->delete();
+    return redirect()->route('admin-dokter.index');
   }
 }
