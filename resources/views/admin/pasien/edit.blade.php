@@ -3,7 +3,6 @@
 @section('content')
 <!-- Main Content -->
 <div id="content">
-
   <!-- Topbar -->
   <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <!-- Sidebar Toggle (Topbar) -->
@@ -35,43 +34,40 @@
     </ul>
   </nav>
   <!-- End of Topbar -->
-
   <!-- Begin Page Content -->
   <div class="container-fluid">
-
     <!-- Page Heading -->
-    <h1 class="h3 mb-3 text-gray-800 font-weight-bold">Tambah User</h1>
-
+    <h1 class="h3 mb-3 text-gray-800 font-weight-bold">Edit Biodata User</h1>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        <h5 class="font-weight-bold text-primary">Masukan User
+        <h5 class="font-weight-bold text-primary">Biodata {{ $user->name }}
         </h5>
       </div>
       <div class="card-body">
-        <form method="POST" action="{{ route('admin.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('admin.update', $user->id) }}" enctype="multipart/form-data">
+          @method('put')
           @csrf
+          {{-- <input type="hidden" name="{{ $users->id }}" value="{{ $users->id }}"> --}}
           <div class="form-group">
             <label for="name">Nama User</label>
-            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-              placeholder="Nama User" value="{{ old('name') }}">
-            @error('name')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
+            <input type="text" class="form-control" id="name" name="name" placeholder="Nama Pasien"
+              value="{{ $user->name }}">
           </div>
           <div class="form-group">
             <label for="email">Email User</label>
-            <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
-              placeholder="Email User" value="{{ old('email') }}">
-            @error('email')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
+            <input type="text" class="form-control" id="email" name="email" placeholder="Email User"
+              value="{{ $user->email }}">
           </div>
-          <button type="submit" class="btn btn-info">Tambah</button>
+          <div class="form-group">
+            <label for="role">Role Dokter</label>
+            <select name="role" class="form-control" id="role">
+              <option value="admin" {{($user->role === 'admin') ? 'Selected' : ''}}>admin</option>
+              <option value="dokter" {{($user->role === 'dokter') ? 'Selected' : ''}}>dokter</option>
+              <option value="pasien" {{($user->role === 'pasien') ? 'Selected' : ''}}>pasien</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-info">Update</button>
         </form>
       </div>
     </div>

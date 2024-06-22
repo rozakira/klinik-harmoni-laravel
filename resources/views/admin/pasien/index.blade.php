@@ -3,7 +3,6 @@
 @section('content')
 <!-- Main Content -->
 <div id="content">
-
   <!-- Topbar -->
   <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <!-- Sidebar Toggle (Topbar) -->
@@ -35,44 +34,58 @@
     </ul>
   </nav>
   <!-- End of Topbar -->
-
   <!-- Begin Page Content -->
   <div class="container-fluid">
-
     <!-- Page Heading -->
-    <h1 class="h3 mb-3 text-gray-800 font-weight-bold">Tambah User</h1>
-
+    <h1 class="h3 mb-3 text-gray-800 font-weight-bold">Daftar User</h1>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        <h5 class="font-weight-bold text-primary">Masukan User
+        <h5 class="font-weight-bold text-primary">Daftar User
+          <a href="{{ route('admin.create') }}" class="btn btn-primary font-weight-bold">
+            + Tambah User
+          </a>
         </h5>
       </div>
       <div class="card-body">
-        <form method="POST" action="{{ route('admin.store') }}" enctype="multipart/form-data">
-          @csrf
-          <div class="form-group">
-            <label for="name">Nama User</label>
-            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-              placeholder="Nama User" value="{{ old('name') }}">
-            @error('name')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          <div class="form-group">
-            <label for="email">Email User</label>
-            <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
-              placeholder="Email User" value="{{ old('email') }}">
-            @error('email')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          <button type="submit" class="btn btn-info">Tambah</button>
-        </form>
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Nama User</th>
+                <th>Email User</th>
+                <th>Role User</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th>Nama User</th>
+                <th>Email User</th>
+                <th>Role User</th>
+                <th>Actions</th>
+              </tr>
+            </tfoot>
+            <tbody>
+              @foreach ($users as $user)
+              <tr>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td>{{ $user->role }}</td>
+                <td>
+                  <span><a href="{{ route('admin.edit', $user->id) }}" class="btn btn-warning">Edit</a></span>
+                  <form action="{{ route('admin.destroy', $user->id) }}" method="post">
+                    @method('delete')
+                    @csrf
+                    <span><button onclick="return confirm('Are you sure?')" class="btn btn-danger d-block"
+                        type="submit">Hapus</button></span>
+                  </form>
+                </td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
