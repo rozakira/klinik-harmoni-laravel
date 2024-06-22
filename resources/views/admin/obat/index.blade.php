@@ -25,7 +25,6 @@
                                                    document.getElementById('logout-form').submit();">
             {{ __('Logout') }}
           </a>
-
           <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
             @csrf
           </form>
@@ -41,43 +40,53 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        <h5 class="font-weight-bold text-primary">Tambah Stock Obat</h5>
+        <h5 class="font-weight-bold text-primary">Daftar Obat
+          <span>
+            <a href="{{ route('obat.create') }}" class="btn ml-4 btn-primary font-weight-bold">
+              + Tambah Obat
+            </a>
+          </span>
+        </h5>
       </div>
       <div class="card-body">
-        <form method="POST" action="{{ route('obat.store') }}" enctype="multipart/form-data">
-          @csrf
-          <div class="form-group">
-            <label for="nama_obat">Nama Obat</label>
-            <input type="text" class="form-control @error('nama_obat') is-invalid @enderror" id="nama_obat"
-              name="nama_obat" placeholder="Nama Obat" value="{{ old('nama_obat') }}">
-            @error('nama_obat')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          <div class="form-group">
-            <label for="jumlah_obat">Jumlah Obat</label>
-            <input type="number" id="jumlah_obat" class="form-control @error('jumlah_obat') is-invalid @enderror"
-              id="jumlah_obat" name="jumlah_obat" placeholder="Jumlah Obat" value="{{ old('jumlah_obat') }}">
-            @error('jumlah_obat')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          <div class="form-group">
-            <label for="harga_obat">Harga Obat</label>
-            <input type="text" id="harga_obat" class="form-control @error('harga_obat') is-invalid @enderror"
-              id="harga_obat" name="harga_obat" placeholder="Harga Obat" value="{{ old('harga_obat') }}">
-            @error('harga_obat')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          <button type="submit" class="btn btn-info">Tambah</button>
-        </form>
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Nama Obat</th>
+                <th>Jumlah Obat</th>
+                <th>Harga Obat</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th>Nama Obat</th>
+                <th>Jumlah Obat</th>
+                <th>Harga Obat</th>
+                <th>Actions</th>
+              </tr>
+            </tfoot>
+            <tbody>
+              @foreach ($obats as $obat)
+              <tr>
+                <td>{{ $obat->nama_obat }}</td>
+                <td>{{ $obat->jumlah_obat }}</td>
+                <td>Rp{{ number_format($obat->harga_obat) }}</td>
+                <td>
+                  <span><a href="{{ route('obat.edit', $obat->id) }}" class="btn btn-warning">Edit</a></span>
+                  <form action="{{ route('obat.destroy', $obat->id) }}" method="post">
+                    @method('delete')
+                    @csrf
+                    <span><button onclick="return confirm('Are you sure?')" class="btn btn-danger d-block"
+                        type="submit">Hapus</button></span>
+                  </form>
+                </td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
