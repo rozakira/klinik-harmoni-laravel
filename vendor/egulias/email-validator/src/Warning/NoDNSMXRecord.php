@@ -2,13 +2,13 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class AddressLiteral extends Warning
+class NoDNSMXRecord extends Warning
 {
-    const CODE = 12;
+    const CODE = 6;
 
     public function __construct()
     {
-        $this->message = 'Address literal in domain part';
+        $this->message = 'No MX DSN record was found for this email';
         $this->rfcNumber = 5321;
     }
 }
