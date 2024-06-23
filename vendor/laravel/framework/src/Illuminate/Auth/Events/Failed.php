@@ -2,7 +2,7 @@
 
 namespace Illuminate\Auth\Events;
 
-class Attempting
+class Failed
 {
     /**
      * The authentication guard name.
@@ -12,31 +12,31 @@ class Attempting
     public $guard;
 
     /**
-     * The credentials for the user.
+     * The user the attempter was trying to authenticate as.
+     *
+     * @var \Illuminate\Contracts\Auth\Authenticatable|null
+     */
+    public $user;
+
+    /**
+     * The credentials provided by the attempter.
      *
      * @var array
      */
     public $credentials;
 
     /**
-     * Indicates if the user should be "remembered".
-     *
-     * @var bool
-     */
-    public $remember;
-
-    /**
      * Create a new event instance.
      *
      * @param  string  $guard
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user
      * @param  array  $credentials
-     * @param  bool  $remember
      * @return void
      */
-    public function __construct($guard, $credentials, $remember)
+    public function __construct($guard, $user, $credentials)
     {
+        $this->user = $user;
         $this->guard = $guard;
-        $this->remember = $remember;
         $this->credentials = $credentials;
     }
 }

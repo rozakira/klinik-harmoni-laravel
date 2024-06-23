@@ -2,8 +2,12 @@
 
 namespace Illuminate\Auth\Events;
 
-class Attempting
+use Illuminate\Queue\SerializesModels;
+
+class Login
 {
+    use SerializesModels;
+
     /**
      * The authentication guard name.
      *
@@ -12,11 +16,11 @@ class Attempting
     public $guard;
 
     /**
-     * The credentials for the user.
+     * The authenticated user.
      *
-     * @var array
+     * @var \Illuminate\Contracts\Auth\Authenticatable
      */
-    public $credentials;
+    public $user;
 
     /**
      * Indicates if the user should be "remembered".
@@ -29,14 +33,14 @@ class Attempting
      * Create a new event instance.
      *
      * @param  string  $guard
-     * @param  array  $credentials
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  bool  $remember
      * @return void
      */
-    public function __construct($guard, $credentials, $remember)
+    public function __construct($guard, $user, $remember)
     {
+        $this->user = $user;
         $this->guard = $guard;
         $this->remember = $remember;
-        $this->credentials = $credentials;
     }
 }
