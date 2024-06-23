@@ -6,16 +6,11 @@
 
 namespace Whoops\Inspector;
 
-use Whoops\Exception\Inspector;
-
-class InspectorFactory implements InspectorFactoryInterface
+interface InspectorFactoryInterface
 {
     /**
      * @param \Throwable $exception
      * @return InspectorInterface
      */
-    public function create($exception)
-    {
-        return new Inspector($exception, $this);
-    }
+    public function create($exception);
 }
