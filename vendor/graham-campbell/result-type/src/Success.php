@@ -22,17 +22,17 @@ use PhpOption\Some;
  *
  * @extends \GrahamCampbell\ResultType\Result<T,E>
  */
-final class Error extends Result
+final class Success extends Result
 {
     /**
-     * @var E
+     * @var T
      */
     private $value;
 
     /**
-     * Internal constructor for an error value.
+     * Internal constructor for a success value.
      *
-     * @param E $value
+     * @param T $value
      *
      * @return void
      */
@@ -44,11 +44,11 @@ final class Error extends Result
     /**
      * Create a new error value.
      *
-     * @template F
+     * @template S
      *
-     * @param F $value
+     * @param S $value
      *
-     * @return \GrahamCampbell\ResultType\Result<T,F>
+     * @return \GrahamCampbell\ResultType\Result<S,E>
      */
     public static function create($value)
     {
@@ -62,7 +62,7 @@ final class Error extends Result
      */
     public function success()
     {
-        return None::create();
+        return Some::create($this->value);
     }
 
     /**
@@ -76,7 +76,7 @@ final class Error extends Result
      */
     public function map(callable $f)
     {
-        return self::create($this->value);
+        return self::create($f($this->value));
     }
 
     /**
@@ -91,8 +91,7 @@ final class Error extends Result
      */
     public function flatMap(callable $f)
     {
-        /** @var \GrahamCampbell\ResultType\Result<S,F> */
-        return self::create($this->value);
+        return $f($this->value);
     }
 
     /**
@@ -102,7 +101,7 @@ final class Error extends Result
      */
     public function error()
     {
-        return Some::create($this->value);
+        return None::create();
     }
 
     /**
@@ -116,6 +115,6 @@ final class Error extends Result
      */
     public function mapError(callable $f)
     {
-        return self::create($f($this->value));
+        return self::create($this->value);
     }
 }
