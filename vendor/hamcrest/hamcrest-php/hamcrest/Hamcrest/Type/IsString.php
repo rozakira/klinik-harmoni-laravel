@@ -7,25 +7,25 @@ namespace Hamcrest\Type;
 use Hamcrest\Core\IsTypeOf;
 
 /**
- * Tests whether the value is an array.
+ * Tests whether the value is a string.
  */
-class IsArray extends IsTypeOf
+class IsString extends IsTypeOf
 {
 
     /**
-     * Creates a new instance of IsArray
+     * Creates a new instance of IsString
      */
     public function __construct()
     {
-        parent::__construct('array');
+        parent::__construct('string');
     }
 
     /**
-     * Is the value an array?
+     * Is the value a string?
      *
      * @factory
      */
-    public static function arrayValue()
+    public static function stringValue()
     {
         return new self;
     }
