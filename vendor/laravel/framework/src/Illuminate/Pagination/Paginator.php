@@ -2,20 +2,20 @@
 
 namespace Illuminate\Contracts\Pagination;
 
-interface CursorPaginator
+interface Paginator
 {
     /**
-     * Get the URL for a given cursor.
+     * Get the URL for a given page.
      *
-     * @param  \Illuminate\Pagination\Cursor|null  $cursor
+     * @param  int  $page
      * @return string
      */
-    public function url($cursor);
+    public function url($page);
 
     /**
      * Add a set of query string values to the paginator.
      *
-     * @param  array|string|null  $key
+     * @param  array|string  $key
      * @param  string|null  $value
      * @return $this
      */
@@ -25,16 +25,9 @@ interface CursorPaginator
      * Get / set the URL fragment to be appended to URLs.
      *
      * @param  string|null  $fragment
-     * @return $this|string|null
+     * @return $this|string
      */
     public function fragment($fragment = null);
-
-    /**
-     * Get the URL for the previous page, or null.
-     *
-     * @return string|null
-     */
-    public function previousPageUrl();
 
     /**
      * The URL for the next page, or null.
@@ -44,6 +37,13 @@ interface CursorPaginator
     public function nextPageUrl();
 
     /**
+     * Get the URL for the previous page, or null.
+     *
+     * @return string|null
+     */
+    public function previousPageUrl();
+
+    /**
      * Get all of the items being paginated.
      *
      * @return array
@@ -51,18 +51,18 @@ interface CursorPaginator
     public function items();
 
     /**
-     * Get the "cursor" of the previous set of items.
+     * Get the "index" of the first item being paginated.
      *
-     * @return \Illuminate\Pagination\Cursor|null
+     * @return int
      */
-    public function previousCursor();
+    public function firstItem();
 
     /**
-     * Get the "cursor" of the next set of items.
+     * Get the "index" of the last item being paginated.
      *
-     * @return \Illuminate\Pagination\Cursor|null
+     * @return int
      */
-    public function nextCursor();
+    public function lastItem();
 
     /**
      * Determine how many items are being shown per page.
@@ -72,11 +72,11 @@ interface CursorPaginator
     public function perPage();
 
     /**
-     * Get the current cursor being paginated.
+     * Determine the current page being paginated.
      *
-     * @return \Illuminate\Pagination\Cursor|null
+     * @return int
      */
-    public function cursor();
+    public function currentPage();
 
     /**
      * Determine if there are enough items to split into multiple pages.
@@ -84,6 +84,13 @@ interface CursorPaginator
      * @return bool
      */
     public function hasPages();
+
+    /**
+     * Determine if there are more items in the data store.
+     *
+     * @return bool
+     */
+    public function hasMorePages();
 
     /**
      * Get the base path for paginator generated URLs.
