@@ -4,7 +4,7 @@ namespace Illuminate\Contracts\Encryption;
 
 use RuntimeException;
 
-class DecryptException extends RuntimeException
+class EncryptException extends RuntimeException
 {
     //
 }
