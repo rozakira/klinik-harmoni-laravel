@@ -2,15 +2,8 @@
 
 namespace Illuminate\Database\Events;
 
-abstract class ConnectionEvent
+class SchemaLoaded
 {
-    /**
-     * The name of the connection.
-     *
-     * @var string
-     */
-    public $connectionName;
-
     /**
      * The database connection instance.
      *
@@ -19,14 +12,30 @@ abstract class ConnectionEvent
     public $connection;
 
     /**
+     * The database connection name.
+     *
+     * @var string
+     */
+    public $connectionName;
+
+    /**
+     * The path to the schema dump.
+     *
+     * @var string
+     */
+    public $path;
+
+    /**
      * Create a new event instance.
      *
      * @param  \Illuminate\Database\Connection  $connection
+     * @param  string  $path
      * @return void
      */
-    public function __construct($connection)
+    public function __construct($connection, $path)
     {
         $this->connection = $connection;
         $this->connectionName = $connection->getName();
+        $this->path = $path;
     }
 }
