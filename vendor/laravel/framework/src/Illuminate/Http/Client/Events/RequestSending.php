@@ -4,7 +4,7 @@ namespace Illuminate\Http\Client\Events;
 
 use Illuminate\Http\Client\Request;
 
-class ConnectionFailed
+class RequestSending
 {
     /**
      * The request instance.
