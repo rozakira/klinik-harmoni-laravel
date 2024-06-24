@@ -3,24 +3,21 @@
 namespace Illuminate\Http\Middleware;
 
 use Closure;
-use Symfony\Component\HttpFoundation\Response;
 
-class CheckResponseForModifications
+class FrameGuard
 {
     /**
-     * Handle an incoming request.
+     * Handle the given request and get the response.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @return mixed
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle($request, Closure $next)
     {
         $response = $next($request);
 
-        if ($response instanceof Response) {
-            $response->isNotModified($request);
-        }
+        $response->headers->set('X-Frame-Options', 'SAMEORIGIN', false);
 
         return $response;
     }
