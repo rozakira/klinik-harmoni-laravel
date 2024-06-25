@@ -14,7 +14,19 @@ declare(strict_types=1);
 namespace League\CommonMark\Extension\CommonMark\Node\Block;
 
 use League\CommonMark\Node\Block\AbstractBlock;
+use League\CommonMark\Node\StringContainerInterface;
 
-class BlockQuote extends AbstractBlock
+final class IndentedCode extends AbstractBlock implements StringContainerInterface
 {
+    private string $literal = '';
+
+    public function getLiteral(): string
+    {
+        return $this->literal;
+    }
+
+    public function setLiteral(string $literal): void
+    {
+        $this->literal = $literal;
+    }
 }
