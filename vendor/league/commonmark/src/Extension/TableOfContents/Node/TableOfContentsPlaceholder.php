@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\TableOfContents\Node;
 
-use League\CommonMark\Extension\CommonMark\Node\Block\ListBlock;
+use League\CommonMark\Node\Block\AbstractBlock;
 
-final class TableOfContents extends ListBlock
+final class TableOfContentsPlaceholder extends AbstractBlock
 {
 }
