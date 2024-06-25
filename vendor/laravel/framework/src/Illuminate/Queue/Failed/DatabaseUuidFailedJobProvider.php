@@ -6,7 +6,7 @@ use DateTimeInterface;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Support\Facades\Date;
 
-class DatabaseFailedJobProvider implements FailedJobProviderInterface, PrunableFailedJobProvider
+class DatabaseUuidFailedJobProvider implements FailedJobProviderInterface, PrunableFailedJobProvider
 {
     /**
      * The connection resolver implementation.
@@ -51,17 +51,20 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface, PrunableF
      * @param  string  $queue
      * @param  string  $payload
      * @param  \Throwable  $exception
-     * @return int|null
+     * @return string|null
      */
     public function log($connection, $queue, $payload, $exception)
     {
-        $failed_at = Date::now();
+        $this->getTable()->insert([
+            'uuid' => $uuid = json_decode($payload, true)['uuid'],
+            'connection' => $connection,
+            'queue' => $queue,
+            'payload' => $payload,
+            'exception' => (string) $exception,
+            'failed_at' => Date::now(),
+        ]);
 
-        $exception = (string) $exception;
-
-        return $this->getTable()->insertGetId(compact(
-            'connection', 'queue', 'payload', 'exception', 'failed_at'
-        ));
+        return $uuid;
     }
 
     /**
@@ -71,7 +74,12 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface, PrunableF
      */
     public function all()
     {
-        return $this->getTable()->orderBy('id', 'desc')->get()->all();
+        return $this->getTable()->orderBy('id', 'desc')->get()->map(function ($record) {
+            $record->id = $record->uuid;
+            unset($record->uuid);
+
+            return $record;
+        })->all();
     }
 
     /**
@@ -82,7 +90,12 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface, PrunableF
      */
     public function find($id)
     {
-        return $this->getTable()->find($id);
+        if ($record = $this->getTable()->where('uuid', $id)->first()) {
+            $record->id = $record->uuid;
+            unset($record->uuid);
+        }
+
+        return $record;
     }
 
     /**
@@ -93,7 +106,7 @@ class DatabaseFailedJobProvider implements FailedJobProviderInterface, PrunableF
      */
     public function forget($id)
     {
-        return $this->getTable()->where('id', $id)->delete() > 0;
+        return $this->getTable()->where('uuid', $id)->delete() > 0;
     }
 
     /**
