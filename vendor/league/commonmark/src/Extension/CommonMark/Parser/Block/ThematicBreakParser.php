@@ -13,48 +13,30 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\CommonMark\Parser\Block;
 
-use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
-use League\CommonMark\Node\Block\AbstractBlock;
+use League\CommonMark\Extension\CommonMark\Node\Block\ThematicBreak;
 use League\CommonMark\Parser\Block\AbstractBlockContinueParser;
 use League\CommonMark\Parser\Block\BlockContinue;
 use League\CommonMark\Parser\Block\BlockContinueParserInterface;
 use League\CommonMark\Parser\Cursor;
 
-final class BlockQuoteParser extends AbstractBlockContinueParser
+final class ThematicBreakParser extends AbstractBlockContinueParser
 {
     /** @psalm-readonly */
-    private BlockQuote $block;
+    private ThematicBreak $block;
 
     public function __construct()
     {
-        $this->block = new BlockQuote();
+        $this->block = new ThematicBreak();
     }
 
-    public function getBlock(): BlockQuote
+    public function getBlock(): ThematicBreak
     {
         return $this->block;
     }
 
-    public function isContainer(): bool
-    {
-        return true;
-    }
-
-    public function canContain(AbstractBlock $childBlock): bool
-    {
-        return true;
-    }
-
     public function tryContinue(Cursor $cursor, BlockContinueParserInterface $activeBlockParser): ?BlockContinue
     {
-        if (! $cursor->isIndented() && $cursor->getNextNonSpaceCharacter() === '>') {
-            $cursor->advanceToNextNonSpaceOrTab();
-            $cursor->advanceBy(1);
-            $cursor->advanceBySpaceOrTab();
-
-            return BlockContinue::at($cursor);
-        }
-
+        // a horizontal rule can never container > 1 line, so fail to match
         return BlockContinue::none();
     }
 }
