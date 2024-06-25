@@ -2,8 +2,9 @@
 
 namespace {{ namespace }};
 
+use {{ namespacedModel }};
 use {{ rootNamespace }}Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use {{ namespacedRequests }}
 
 class {{ class }} extends Controller
 {
@@ -20,10 +21,10 @@ class {{ class }} extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \{{ namespacedStoreRequest }}  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store({{ storeRequest }} $request)
     {
         //
     }
@@ -31,10 +32,10 @@ class {{ class }} extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show({{ model }} ${{ modelVariable }})
     {
         //
     }
@@ -42,11 +43,11 @@ class {{ class }} extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \{{ namespacedUpdateRequest }}  $request
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }})
     {
         //
     }
@@ -54,10 +55,10 @@ class {{ class }} extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy({{ model }} ${{ modelVariable }})
     {
         //
     }
