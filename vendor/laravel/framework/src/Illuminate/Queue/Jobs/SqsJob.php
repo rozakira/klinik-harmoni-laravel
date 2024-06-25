@@ -2,24 +2,23 @@
 
 namespace Illuminate\Queue\Jobs;
 
+use Aws\Sqs\SqsClient;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Queue\Job as JobContract;
-use Pheanstalk\Job as PheanstalkJob;
-use Pheanstalk\Pheanstalk;
 
-class BeanstalkdJob extends Job implements JobContract
+class SqsJob extends Job implements JobContract
 {
     /**
-     * The Pheanstalk instance.
+     * The Amazon SQS client instance.
      *
-     * @var \Pheanstalk\Pheanstalk
+     * @var \Aws\Sqs\SqsClient
      */
-    protected $pheanstalk;
+    protected $sqs;
 
     /**
-     * The Pheanstalk job instance.
+     * The Amazon SQS job instance.
      *
-     * @var \Pheanstalk\Job
+     * @var array
      */
     protected $job;
 
@@ -27,18 +26,18 @@ class BeanstalkdJob extends Job implements JobContract
      * Create a new job instance.
      *
      * @param  \Illuminate\Container\Container  $container
-     * @param  \Pheanstalk\Pheanstalk  $pheanstalk
-     * @param  \Pheanstalk\Job  $job
+     * @param  \Aws\Sqs\SqsClient  $sqs
+     * @param  array  $job
      * @param  string  $connectionName
      * @param  string  $queue
      * @return void
      */
-    public function __construct(Container $container, Pheanstalk $pheanstalk, PheanstalkJob $job, $connectionName, $queue)
+    public function __construct(Container $container, SqsClient $sqs, array $job, $connectionName, $queue)
     {
+        $this->sqs = $sqs;
         $this->job = $job;
         $this->queue = $queue;
         $this->container = $container;
-        $this->pheanstalk = $pheanstalk;
         $this->connectionName = $connectionName;
     }
 
@@ -52,21 +51,11 @@ class BeanstalkdJob extends Job implements JobContract
     {
         parent::release($delay);
 
-        $priority = Pheanstalk::DEFAULT_PRIORITY;
-
-        $this->pheanstalk->release($this->job, $priority, $delay);
-    }
-
-    /**
-     * Bury the job in the queue.
-     *
-     * @return void
-     */
-    public function bury()
-    {
-        parent::release();
-
-        $this->pheanstalk->bury($this->job);
+        $this->sqs->changeMessageVisibility([
+            'QueueUrl' => $this->queue,
+            'ReceiptHandle' => $this->job['ReceiptHandle'],
+            'VisibilityTimeout' => $delay,
+        ]);
     }
 
     /**
@@ -78,7 +67,9 @@ class BeanstalkdJob extends Job implements JobContract
     {
         parent::delete();
 
-        $this->pheanstalk->delete($this->job);
+        $this->sqs->deleteMessage([
+            'QueueUrl' => $this->queue, 'ReceiptHandle' => $this->job['ReceiptHandle'],
+        ]);
     }
 
     /**
@@ -88,19 +79,17 @@ class BeanstalkdJob extends Job implements JobContract
      */
     public function attempts()
     {
-        $stats = $this->pheanstalk->statsJob($this->job);
-
-        return (int) $stats->reserves;
+        return (int) $this->job['Attributes']['ApproximateReceiveCount'];
     }
 
     /**
      * Get the job identifier.
      *
-     * @return int
+     * @return string
      */
     public function getJobId()
     {
-        return $this->job->getId();
+        return $this->job['MessageId'];
     }
 
     /**
@@ -110,25 +99,25 @@ class BeanstalkdJob extends Job implements JobContract
      */
     public function getRawBody()
     {
-        return $this->job->getData();
+        return $this->job['Body'];
     }
 
     /**
-     * Get the underlying Pheanstalk instance.
+     * Get the underlying SQS client instance.
      *
-     * @return \Pheanstalk\Pheanstalk
+     * @return \Aws\Sqs\SqsClient
      */
-    public function getPheanstalk()
+    public function getSqs()
     {
-        return $this->pheanstalk;
+        return $this->sqs;
     }
 
     /**
-     * Get the underlying Pheanstalk job.
+     * Get the underlying raw SQS job.
      *
-     * @return \Pheanstalk\Job
+     * @return array
      */
-    public function getPheanstalkJob()
+    public function getSqsJob()
     {
         return $this->job;
     }
