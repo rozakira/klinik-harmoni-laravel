@@ -5,7 +5,7 @@ namespace Illuminate\Routing\Matching;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 
-class HostValidator implements ValidatorInterface
+class SchemeValidator implements ValidatorInterface
 {
     /**
      * Validate a given rule against a route and request.
@@ -16,12 +16,12 @@ class HostValidator implements ValidatorInterface
      */
     public function matches(Route $route, Request $request)
     {
-        $hostRegex = $route->getCompiled()->getHostRegex();
-
-        if (is_null($hostRegex)) {
-            return true;
+        if ($route->httpOnly()) {
+            return ! $request->secure();
+        } elseif ($route->secure()) {
+            return $request->secure();
         }
 
-        return preg_match($hostRegex, $request->getHost());
+        return true;
     }
 }
