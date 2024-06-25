@@ -14,49 +14,31 @@ declare(strict_types=1);
 namespace League\CommonMark\Extension\DescriptionList\Parser;
 
 use League\CommonMark\Extension\DescriptionList\Node\Description;
+use League\CommonMark\Extension\DescriptionList\Node\DescriptionList;
+use League\CommonMark\Extension\DescriptionList\Node\DescriptionTerm;
 use League\CommonMark\Node\Block\AbstractBlock;
 use League\CommonMark\Parser\Block\AbstractBlockContinueParser;
 use League\CommonMark\Parser\Block\BlockContinue;
 use League\CommonMark\Parser\Block\BlockContinueParserInterface;
 use League\CommonMark\Parser\Cursor;
 
-final class DescriptionContinueParser extends AbstractBlockContinueParser
+final class DescriptionListContinueParser extends AbstractBlockContinueParser
 {
-    private Description $block;
+    private DescriptionList $block;
 
-    private int $indentation;
-
-    public function __construct(bool $tight, int $indentation)
+    public function __construct()
     {
-        $this->block       = new Description($tight);
-        $this->indentation = $indentation;
+        $this->block = new DescriptionList();
     }
 
-    public function getBlock(): Description
+    public function getBlock(): DescriptionList
     {
         return $this->block;
     }
 
     public function tryContinue(Cursor $cursor, BlockContinueParserInterface $activeBlockParser): ?BlockContinue
     {
-        if ($cursor->isBlank()) {
-            if ($this->block->firstChild() === null) {
-                // Blank line after empty item
-                return BlockContinue::none();
-            }
-
-            $cursor->advanceToNextNonSpaceOrTab();
-
-            return BlockContinue::at($cursor);
-        }
-
-        if ($cursor->getIndent() >= $this->indentation) {
-            $cursor->advanceBy($this->indentation, true);
-
-            return BlockContinue::at($cursor);
-        }
-
-        return BlockContinue::none();
+        return BlockContinue::at($cursor);
     }
 
     public function isContainer(): bool
@@ -66,6 +48,6 @@ final class DescriptionContinueParser extends AbstractBlockContinueParser
 
     public function canContain(AbstractBlock $childBlock): bool
     {
-        return true;
+        return $childBlock instanceof DescriptionTerm || $childBlock instanceof Description;
     }
 }
