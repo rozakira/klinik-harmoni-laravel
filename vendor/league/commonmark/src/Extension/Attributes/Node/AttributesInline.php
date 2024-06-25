@@ -14,27 +14,24 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\Attributes\Node;
 
-use League\CommonMark\Node\Block\AbstractBlock;
+use League\CommonMark\Node\Inline\AbstractInline;
 
-final class Attributes extends AbstractBlock
+final class AttributesInline extends AbstractInline
 {
-    public const TARGET_PARENT   = 0;
-    public const TARGET_PREVIOUS = 1;
-    public const TARGET_NEXT     = 2;
-
     /** @var array<string, mixed> */
     private array $attributes;
 
-    private int $target = self::TARGET_NEXT;
+    private bool $block;
 
     /**
      * @param array<string, mixed> $attributes
      */
-    public function __construct(array $attributes)
+    public function __construct(array $attributes, bool $block)
     {
         parent::__construct();
 
         $this->attributes = $attributes;
+        $this->block      = $block;
     }
 
     /**
@@ -53,13 +50,8 @@ final class Attributes extends AbstractBlock
         $this->attributes = $attributes;
     }
 
-    public function getTarget(): int
+    public function isBlock(): bool
     {
-        return $this->target;
-    }
-
-    public function setTarget(int $target): void
-    {
-        $this->target = $target;
+        return $this->block;
     }
 }
