@@ -2,7 +2,7 @@
 
 namespace Illuminate\Queue\Events;
 
-class JobExceptionOccurred
+class JobFailed
 {
     /**
      * The connection name.
@@ -19,7 +19,7 @@ class JobExceptionOccurred
     public $job;
 
     /**
-     * The exception instance.
+     * The exception that caused the job to fail.
      *
      * @var \Throwable
      */

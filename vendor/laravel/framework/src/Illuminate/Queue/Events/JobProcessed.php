@@ -2,7 +2,7 @@
 
 namespace Illuminate\Queue\Events;
 
-class JobExceptionOccurred
+class JobProcessed
 {
     /**
      * The connection name.
@@ -19,24 +19,15 @@ class JobExceptionOccurred
     public $job;
 
     /**
-     * The exception instance.
-     *
-     * @var \Throwable
-     */
-    public $exception;
-
-    /**
      * Create a new event instance.
      *
      * @param  string  $connectionName
      * @param  \Illuminate\Contracts\Queue\Job  $job
-     * @param  \Throwable  $exception
      * @return void
      */
-    public function __construct($connectionName, $job, $exception)
+    public function __construct($connectionName, $job)
     {
         $this->job = $job;
-        $this->exception = $exception;
         $this->connectionName = $connectionName;
     }
 }
