@@ -16,17 +16,19 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\CommonMark\Renderer\Block;
 
-use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
+use League\CommonMark\Extension\CommonMark\Node\Block\ListItem;
+use League\CommonMark\Extension\TaskList\TaskListItemMarker;
+use League\CommonMark\Node\Block\Paragraph;
 use League\CommonMark\Node\Node;
 use League\CommonMark\Renderer\ChildNodeRendererInterface;
 use League\CommonMark\Renderer\NodeRendererInterface;
 use League\CommonMark\Util\HtmlElement;
 use League\CommonMark\Xml\XmlNodeRendererInterface;
 
-final class BlockQuoteRenderer implements NodeRendererInterface, XmlNodeRendererInterface
+final class ListItemRenderer implements NodeRendererInterface, XmlNodeRendererInterface
 {
     /**
-     * @param BlockQuote $node
+     * @param ListItem $node
      *
      * {@inheritDoc}
      *
@@ -34,37 +36,39 @@ final class BlockQuoteRenderer implements NodeRendererInterface, XmlNodeRenderer
      */
     public function render(Node $node, ChildNodeRendererInterface $childRenderer): \Stringable
     {
-        BlockQuote::assertInstanceOf($node);
+        ListItem::assertInstanceOf($node);
+
+        $contents = $childRenderer->renderNodes($node->children());
+        if (\substr($contents, 0, 1) === '<' && ! $this->startsTaskListItem($node)) {
+            $contents = "\n" . $contents;
+        }
+
+        if (\substr($contents, -1, 1) === '>') {
+            $contents .= "\n";
+        }
 
         $attrs = $node->data->get('attributes');
 
-        $filling        = $childRenderer->renderNodes($node->children());
-        $innerSeparator = $childRenderer->getInnerSeparator();
-        if ($filling === '') {
-            return new HtmlElement('blockquote', $attrs, $innerSeparator);
-        }
-
-        return new HtmlElement(
-            'blockquote',
-            $attrs,
-            $innerSeparator . $filling . $innerSeparator
-        );
+        return new HtmlElement('li', $attrs, $contents);
     }
 
     public function getXmlTagName(Node $node): string
     {
-        return 'block_quote';
+        return 'item';
     }
 
     /**
-     * @param BlockQuote $node
-     *
-     * @return array<string, scalar>
-     *
-     * @psalm-suppress MoreSpecificImplementedParamType
+     * {@inheritDoc}
      */
     public function getXmlAttributes(Node $node): array
     {
         return [];
+    }
+
+    private function startsTaskListItem(ListItem $block): bool
+    {
+        $firstChild = $block->firstChild();
+
+        return $firstChild instanceof Paragraph && $firstChild->firstChild() instanceof TaskListItemMarker;
     }
 }

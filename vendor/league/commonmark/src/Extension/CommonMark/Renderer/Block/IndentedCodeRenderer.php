@@ -16,17 +16,18 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\CommonMark\Renderer\Block;
 
-use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
+use League\CommonMark\Extension\CommonMark\Node\Block\IndentedCode;
 use League\CommonMark\Node\Node;
 use League\CommonMark\Renderer\ChildNodeRendererInterface;
 use League\CommonMark\Renderer\NodeRendererInterface;
 use League\CommonMark\Util\HtmlElement;
+use League\CommonMark\Util\Xml;
 use League\CommonMark\Xml\XmlNodeRendererInterface;
 
-final class BlockQuoteRenderer implements NodeRendererInterface, XmlNodeRendererInterface
+final class IndentedCodeRenderer implements NodeRendererInterface, XmlNodeRendererInterface
 {
     /**
-     * @param BlockQuote $node
+     * @param IndentedCode $node
      *
      * {@inheritDoc}
      *
@@ -34,34 +35,24 @@ final class BlockQuoteRenderer implements NodeRendererInterface, XmlNodeRenderer
      */
     public function render(Node $node, ChildNodeRendererInterface $childRenderer): \Stringable
     {
-        BlockQuote::assertInstanceOf($node);
+        IndentedCode::assertInstanceOf($node);
 
         $attrs = $node->data->get('attributes');
 
-        $filling        = $childRenderer->renderNodes($node->children());
-        $innerSeparator = $childRenderer->getInnerSeparator();
-        if ($filling === '') {
-            return new HtmlElement('blockquote', $attrs, $innerSeparator);
-        }
-
         return new HtmlElement(
-            'blockquote',
-            $attrs,
-            $innerSeparator . $filling . $innerSeparator
+            'pre',
+            [],
+            new HtmlElement('code', $attrs, Xml::escape($node->getLiteral()))
         );
     }
 
     public function getXmlTagName(Node $node): string
     {
-        return 'block_quote';
+        return 'code_block';
     }
 
     /**
-     * @param BlockQuote $node
-     *
      * @return array<string, scalar>
-     *
-     * @psalm-suppress MoreSpecificImplementedParamType
      */
     public function getXmlAttributes(Node $node): array
     {

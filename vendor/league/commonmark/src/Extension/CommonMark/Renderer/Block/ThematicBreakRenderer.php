@@ -16,17 +16,17 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\CommonMark\Renderer\Block;
 
-use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
+use League\CommonMark\Extension\CommonMark\Node\Block\ThematicBreak;
 use League\CommonMark\Node\Node;
 use League\CommonMark\Renderer\ChildNodeRendererInterface;
 use League\CommonMark\Renderer\NodeRendererInterface;
 use League\CommonMark\Util\HtmlElement;
 use League\CommonMark\Xml\XmlNodeRendererInterface;
 
-final class BlockQuoteRenderer implements NodeRendererInterface, XmlNodeRendererInterface
+final class ThematicBreakRenderer implements NodeRendererInterface, XmlNodeRendererInterface
 {
     /**
-     * @param BlockQuote $node
+     * @param ThematicBreak $node
      *
      * {@inheritDoc}
      *
@@ -34,34 +34,20 @@ final class BlockQuoteRenderer implements NodeRendererInterface, XmlNodeRenderer
      */
     public function render(Node $node, ChildNodeRendererInterface $childRenderer): \Stringable
     {
-        BlockQuote::assertInstanceOf($node);
+        ThematicBreak::assertInstanceOf($node);
 
         $attrs = $node->data->get('attributes');
 
-        $filling        = $childRenderer->renderNodes($node->children());
-        $innerSeparator = $childRenderer->getInnerSeparator();
-        if ($filling === '') {
-            return new HtmlElement('blockquote', $attrs, $innerSeparator);
-        }
-
-        return new HtmlElement(
-            'blockquote',
-            $attrs,
-            $innerSeparator . $filling . $innerSeparator
-        );
+        return new HtmlElement('hr', $attrs, '', true);
     }
 
     public function getXmlTagName(Node $node): string
     {
-        return 'block_quote';
+        return 'thematic_break';
     }
 
     /**
-     * @param BlockQuote $node
-     *
-     * @return array<string, scalar>
-     *
-     * @psalm-suppress MoreSpecificImplementedParamType
+     * {@inheritDoc}
      */
     public function getXmlAttributes(Node $node): array
     {
