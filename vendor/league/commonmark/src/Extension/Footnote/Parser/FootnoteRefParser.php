@@ -14,53 +14,44 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\Footnote\Parser;
 
-use League\CommonMark\Environment\EnvironmentAwareInterface;
-use League\CommonMark\Environment\EnvironmentInterface;
 use League\CommonMark\Extension\Footnote\Node\FootnoteRef;
-use League\CommonMark\Normalizer\TextNormalizerInterface;
 use League\CommonMark\Parser\Inline\InlineParserInterface;
 use League\CommonMark\Parser\Inline\InlineParserMatch;
 use League\CommonMark\Parser\InlineParserContext;
 use League\CommonMark\Reference\Reference;
+use League\Config\ConfigurationAwareInterface;
 use League\Config\ConfigurationInterface;
 
-final class AnonymousFootnoteRefParser implements InlineParserInterface, EnvironmentAwareInterface
+final class FootnoteRefParser implements InlineParserInterface, ConfigurationAwareInterface
 {
     private ConfigurationInterface $config;
 
-    /** @psalm-readonly-allow-private-mutation */
-    private TextNormalizerInterface $slugNormalizer;
-
     public function getMatchDefinition(): InlineParserMatch
     {
-        return InlineParserMatch::regex('\^\[([^\]]+)\]');
+        return InlineParserMatch::regex('\[\^([^\s\]]+)\]');
     }
 
     public function parse(InlineParserContext $inlineContext): bool
     {
         $inlineContext->getCursor()->advanceBy($inlineContext->getFullMatchLength());
 
-        [$label]   = $inlineContext->getSubMatches();
-        $reference = $this->createReference($label);
-        $inlineContext->getContainer()->appendChild(new FootnoteRef($reference, $label));
+        [$label] = $inlineContext->getSubMatches();
+        $inlineContext->getContainer()->appendChild(new FootnoteRef($this->createReference($label)));
 
         return true;
     }
 
     private function createReference(string $label): Reference
     {
-        $refLabel = $this->slugNormalizer->normalize($label, ['length' => 20]);
-
         return new Reference(
-            $refLabel,
-            '#' . $this->config->get('footnote/footnote_id_prefix') . $refLabel,
+            $label,
+            '#' . $this->config->get('footnote/footnote_id_prefix') . $label,
             $label
         );
     }
 
-    public function setEnvironment(EnvironmentInterface $environment): void
+    public function setConfiguration(ConfigurationInterface $configuration): void
     {
-        $this->config         = $environment->getConfiguration();
-        $this->slugNormalizer = $environment->getSlugNormalizer();
+        $this->config = $configuration;
     }
 }
