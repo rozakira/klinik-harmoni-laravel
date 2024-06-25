@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\Footnote\Renderer;
 
-use League\CommonMark\Extension\Footnote\Node\FootnoteBackref;
+use League\CommonMark\Extension\Footnote\Node\FootnoteContainer;
 use League\CommonMark\Node\Node;
 use League\CommonMark\Renderer\ChildNodeRendererInterface;
 use League\CommonMark\Renderer\NodeRendererInterface;
@@ -23,34 +23,32 @@ use League\CommonMark\Xml\XmlNodeRendererInterface;
 use League\Config\ConfigurationAwareInterface;
 use League\Config\ConfigurationInterface;
 
-final class FootnoteBackrefRenderer implements NodeRendererInterface, XmlNodeRendererInterface, ConfigurationAwareInterface
+final class FootnoteContainerRenderer implements NodeRendererInterface, XmlNodeRendererInterface, ConfigurationAwareInterface
 {
-    public const DEFAULT_SYMBOL = '↩';
-
     private ConfigurationInterface $config;
 
     /**
-     * @param FootnoteBackref $node
+     * @param FootnoteContainer $node
      *
      * {@inheritDoc}
      *
      * @psalm-suppress MoreSpecificImplementedParamType
      */
-    public function render(Node $node, ChildNodeRendererInterface $childRenderer): string
+    public function render(Node $node, ChildNodeRendererInterface $childRenderer): \Stringable
     {
-        FootnoteBackref::assertInstanceOf($node);
+        FootnoteContainer::assertInstanceOf($node);
 
         $attrs = $node->data->getData('attributes');
 
-        $attrs->append('class', $this->config->get('footnote/backref_class'));
-        $attrs->set('rev', 'footnote');
-        $attrs->set('href', \mb_strtolower($node->getReference()->getDestination(), 'UTF-8'));
-        $attrs->set('role', 'doc-backlink');
+        $attrs->append('class', $this->config->get('footnote/container_class'));
+        $attrs->set('role', 'doc-endnotes');
 
-        $symbol = $this->config->get('footnote/backref_symbol');
-        \assert(\is_string($symbol));
+        $contents = new HtmlElement('ol', [], $childRenderer->renderNodes($node->children()));
+        if ($this->config->get('footnote/container_add_hr')) {
+            $contents = [new HtmlElement('hr', [], null, true), $contents];
+        }
 
-        return '&nbsp;' . new HtmlElement('a', $attrs->export(), \htmlspecialchars($symbol), true);
+        return new HtmlElement('div', $attrs->export(), $contents);
     }
 
     public function setConfiguration(ConfigurationInterface $configuration): void
@@ -60,22 +58,14 @@ final class FootnoteBackrefRenderer implements NodeRendererInterface, XmlNodeRen
 
     public function getXmlTagName(Node $node): string
     {
-        return 'footnote_backref';
+        return 'footnote_container';
     }
 
     /**
-     * @param FootnoteBackref $node
-     *
      * @return array<string, scalar>
-     *
-     * @psalm-suppress MoreSpecificImplementedParamType
      */
     public function getXmlAttributes(Node $node): array
     {
-        FootnoteBackref::assertInstanceOf($node);
-
-        return [
-            'reference' => $node->getReference()->getLabel(),
-        ];
+        return [];
     }
 }
