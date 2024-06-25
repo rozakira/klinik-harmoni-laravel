@@ -5,7 +5,7 @@ namespace Laravel\Sanctum\Http\Middleware;
 use Illuminate\Auth\AuthenticationException;
 use Laravel\Sanctum\Exceptions\MissingAbilityException;
 
-class CheckAbilities
+class CheckForAnyAbility
 {
     /**
      * Handle the incoming request.
@@ -24,11 +24,11 @@ class CheckAbilities
         }
 
         foreach ($abilities as $ability) {
-            if (! $request->user()->tokenCan($ability)) {
-                throw new MissingAbilityException($ability);
+            if ($request->user()->tokenCan($ability)) {
+                return $next($request);
             }
         }
 
-        return $next($request);
+        throw new MissingAbilityException($abilities);
     }
 }
