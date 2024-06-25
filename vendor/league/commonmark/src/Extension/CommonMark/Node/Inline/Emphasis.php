@@ -17,25 +17,26 @@ declare(strict_types=1);
 namespace League\CommonMark\Extension\CommonMark\Node\Inline;
 
 use League\CommonMark\Node\Inline\AbstractInline;
+use League\CommonMark\Node\Inline\DelimitedInterface;
 
-abstract class AbstractWebResource extends AbstractInline
+final class Emphasis extends AbstractInline implements DelimitedInterface
 {
-    protected string $url;
+    private string $delimiter;
 
-    public function __construct(string $url)
+    public function __construct(string $delimiter = '_')
     {
         parent::__construct();
 
-        $this->url = $url;
+        $this->delimiter = $delimiter;
     }
 
-    public function getUrl(): string
+    public function getOpeningDelimiter(): string
     {
-        return $this->url;
+        return $this->delimiter;
     }
 
-    public function setUrl(string $url): void
+    public function getClosingDelimiter(): string
     {
-        $this->url = $url;
+        return $this->delimiter;
     }
 }
