@@ -16,18 +16,17 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\CommonMark\Renderer\Inline;
 
-use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Emphasis;
 use League\CommonMark\Node\Node;
 use League\CommonMark\Renderer\ChildNodeRendererInterface;
 use League\CommonMark\Renderer\NodeRendererInterface;
 use League\CommonMark\Util\HtmlElement;
-use League\CommonMark\Util\Xml;
 use League\CommonMark\Xml\XmlNodeRendererInterface;
 
-final class CodeRenderer implements NodeRendererInterface, XmlNodeRendererInterface
+final class EmphasisRenderer implements NodeRendererInterface, XmlNodeRendererInterface
 {
     /**
-     * @param Code $node
+     * @param Emphasis $node
      *
      * {@inheritDoc}
      *
@@ -35,16 +34,16 @@ final class CodeRenderer implements NodeRendererInterface, XmlNodeRendererInterf
      */
     public function render(Node $node, ChildNodeRendererInterface $childRenderer): \Stringable
     {
-        Code::assertInstanceOf($node);
+        Emphasis::assertInstanceOf($node);
 
         $attrs = $node->data->get('attributes');
 
-        return new HtmlElement('code', $attrs, Xml::escape($node->getLiteral()));
+        return new HtmlElement('em', $attrs, $childRenderer->renderNodes($node->children()));
     }
 
     public function getXmlTagName(Node $node): string
     {
-        return 'code';
+        return 'emph';
     }
 
     /**

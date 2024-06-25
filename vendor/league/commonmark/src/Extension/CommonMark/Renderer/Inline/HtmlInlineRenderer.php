@@ -16,35 +16,44 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\CommonMark\Renderer\Inline;
 
-use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
+use League\CommonMark\Extension\CommonMark\Node\Inline\HtmlInline;
 use League\CommonMark\Node\Node;
 use League\CommonMark\Renderer\ChildNodeRendererInterface;
 use League\CommonMark\Renderer\NodeRendererInterface;
-use League\CommonMark\Util\HtmlElement;
-use League\CommonMark\Util\Xml;
+use League\CommonMark\Util\HtmlFilter;
 use League\CommonMark\Xml\XmlNodeRendererInterface;
+use League\Config\ConfigurationAwareInterface;
+use League\Config\ConfigurationInterface;
 
-final class CodeRenderer implements NodeRendererInterface, XmlNodeRendererInterface
+final class HtmlInlineRenderer implements NodeRendererInterface, XmlNodeRendererInterface, ConfigurationAwareInterface
 {
+    /** @psalm-readonly-allow-private-mutation */
+    private ConfigurationInterface $config;
+
     /**
-     * @param Code $node
+     * @param HtmlInline $node
      *
      * {@inheritDoc}
      *
      * @psalm-suppress MoreSpecificImplementedParamType
      */
-    public function render(Node $node, ChildNodeRendererInterface $childRenderer): \Stringable
+    public function render(Node $node, ChildNodeRendererInterface $childRenderer): string
     {
-        Code::assertInstanceOf($node);
+        HtmlInline::assertInstanceOf($node);
 
-        $attrs = $node->data->get('attributes');
+        $htmlInput = $this->config->get('html_input');
 
-        return new HtmlElement('code', $attrs, Xml::escape($node->getLiteral()));
+        return HtmlFilter::filter($node->getLiteral(), $htmlInput);
+    }
+
+    public function setConfiguration(ConfigurationInterface $configuration): void
+    {
+        $this->config = $configuration;
     }
 
     public function getXmlTagName(Node $node): string
     {
-        return 'code';
+        return 'html_inline';
     }
 
     /**
