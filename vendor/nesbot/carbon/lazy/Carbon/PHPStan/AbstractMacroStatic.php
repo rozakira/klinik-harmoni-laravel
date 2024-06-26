@@ -22,14 +22,23 @@ if (!class_exists(AbstractReflectionMacro::class, false)) {
         /**
          * {@inheritdoc}
          */
-        public function getReflection(): ?ReflectionMethod
+        public function getReflection(): ?Reflection\Adapter\ReflectionMethod
         {
+            if ($this->reflectionFunction instanceof Reflection\Adapter\ReflectionMethod) {
+                return $this->reflectionFunction;
+            }
+
             if ($this->reflectionFunction instanceof Reflection\ReflectionMethod) {
                 return new Reflection\Adapter\ReflectionMethod($this->reflectionFunction);
             }
 
             return $this->reflectionFunction instanceof ReflectionMethod
-                ? $this->reflectionFunction
+                ? new Reflection\Adapter\ReflectionMethod(
+                    Reflection\ReflectionMethod::createFromName(
+                        $this->reflectionFunction->getDeclaringClass()->getName(),
+                        $this->reflectionFunction->getName()
+                    )
+                )
                 : null;
         }
     }
