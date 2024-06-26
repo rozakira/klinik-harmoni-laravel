@@ -15,23 +15,22 @@ use Monolog\Logger;
 use Psr\Log\LogLevel;
 
 /**
- * Injects Git branch and Git commit SHA in all records
+ * Injects Hg branch and Hg revision number in all records
  *
- * @author Nick Otter
- * @author Jordi Boggiano <j.boggiano@seld.be>
+ * @author Jonathan A. Schweder <jonathanschweder@gmail.com>
  *
- * @phpstan-import-type Level from \Monolog\Logger
  * @phpstan-import-type LevelName from \Monolog\Logger
+ * @phpstan-import-type Level from \Monolog\Logger
  */
-class GitProcessor implements ProcessorInterface
+class MercurialProcessor implements ProcessorInterface
 {
-    /** @var int */
+    /** @var Level */
     private $level;
-    /** @var array{branch: string, commit: string}|array<never>|null */
+    /** @var array{branch: string, revision: string}|array<never>|null */
     private static $cache = null;
 
     /**
-     * @param string|int $level The minimum logging level at which this Processor will be triggered
+     * @param int|string $level The minimum logging level at which this Processor will be triggered
      *
      * @phpstan-param Level|LevelName|LogLevel::* $level
      */
@@ -50,25 +49,26 @@ class GitProcessor implements ProcessorInterface
             return $record;
         }
 
-        $record['extra']['git'] = self::getGitInfo();
+        $record['extra']['hg'] = self::getMercurialInfo();
 
         return $record;
     }
 
     /**
-     * @return array{branch: string, commit: string}|array<never>
+     * @return array{branch: string, revision: string}|array<never>
      */
-    private static function getGitInfo(): array
+    private static function getMercurialInfo(): array
     {
         if (self::$cache) {
             return self::$cache;
         }
 
-        $branches = `git branch -v --no-abbrev`;
-        if ($branches && preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches)) {
+        $result = explode(' ', trim(`hg id -nb`));
+
+        if (count($result) >= 3) {
             return self::$cache = [
-                'branch' => $matches[1],
-                'commit' => $matches[2],
+                'branch' => $result[1],
+                'revision' => $result[2],
             ];
         }
 
