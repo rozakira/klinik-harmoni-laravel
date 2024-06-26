@@ -4,12 +4,12 @@ namespace PhpParser\Node\Scalar\MagicConst;
 
 use PhpParser\Node\Scalar\MagicConst;
 
-class Class_ extends MagicConst {
+class Namespace_ extends MagicConst {
     public function getName(): string {
-        return '__CLASS__';
+        return '__NAMESPACE__';
     }
 
     public function getType(): string {
-        return 'Scalar_MagicConst_Class';
+        return 'Scalar_MagicConst_Namespace';
     }
 }
