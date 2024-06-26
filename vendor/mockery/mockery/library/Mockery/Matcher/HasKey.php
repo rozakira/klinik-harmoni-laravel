@@ -10,7 +10,13 @@
 
 namespace Mockery\Matcher;
 
-class AndAnyOtherArgs extends MatcherAbstract
+use ArrayAccess;
+
+use function array_key_exists;
+use function is_array;
+use function sprintf;
+
+class HasKey extends MatcherAbstract
 {
     /**
      * Return a string representation of this Matcher
@@ -19,7 +25,7 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function __toString()
     {
-        return '<AndAnyOthers>';
+        return sprintf('<HasKey[%s]>', $this->_expected);
     }
 
     /**
@@ -33,6 +39,10 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function match(&$actual)
     {
-        return true;
+        if (! is_array($actual) && ! $actual instanceof ArrayAccess) {
+            return false;
+        }
+
+        return array_key_exists($this->_expected, (array) $actual);
     }
 }

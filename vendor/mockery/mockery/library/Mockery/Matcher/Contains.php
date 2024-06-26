@@ -10,7 +10,10 @@
 
 namespace Mockery\Matcher;
 
-class AndAnyOtherArgs extends MatcherAbstract
+use function array_values;
+use function implode;
+
+class Contains extends MatcherAbstract
 {
     /**
      * Return a string representation of this Matcher
@@ -19,7 +22,12 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function __toString()
     {
-        return '<AndAnyOthers>';
+        $elements = [];
+        foreach ($this->_expected as $v) {
+            $elements[] = (string) $v;
+        }
+
+        return '<Contains[' . implode(', ', $elements) . ']>';
     }
 
     /**
@@ -33,6 +41,21 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function match(&$actual)
     {
+        $values = array_values($actual);
+        foreach ($this->_expected as $exp) {
+            $match = false;
+            foreach ($values as $val) {
+                if ($exp === $val || $exp == $val) {
+                    $match = true;
+                    break;
+                }
+            }
+
+            if ($match === false) {
+                return false;
+            }
+        }
+
         return true;
     }
 }

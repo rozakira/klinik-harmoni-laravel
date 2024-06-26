@@ -10,7 +10,9 @@
 
 namespace Mockery\Matcher;
 
-class AndAnyOtherArgs extends MatcherAbstract
+use function preg_match;
+
+class Pattern extends MatcherAbstract
 {
     /**
      * Return a string representation of this Matcher
@@ -19,11 +21,11 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function __toString()
     {
-        return '<AndAnyOthers>';
+        return '<Pattern>';
     }
 
     /**
-     * Check if the actual value matches the expected.
+     * Check if the actual value matches the expected pattern.
      *
      * @template TMixed
      *
@@ -33,6 +35,6 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function match(&$actual)
     {
-        return true;
+        return preg_match($this->_expected, (string) $actual) >= 1;
     }
 }

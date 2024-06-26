@@ -10,7 +10,7 @@
 
 namespace Mockery\Matcher;
 
-class AndAnyOtherArgs extends MatcherAbstract
+class IsSame extends MatcherAbstract
 {
     /**
      * Return a string representation of this Matcher
@@ -19,7 +19,7 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function __toString()
     {
-        return '<AndAnyOthers>';
+        return '<IsSame>';
     }
 
     /**
@@ -33,6 +33,6 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function match(&$actual)
     {
-        return true;
+        return $this->_expected === $actual;
     }
 }

@@ -10,7 +10,9 @@
 
 namespace Mockery\Matcher;
 
-class AndAnyOtherArgs extends MatcherAbstract
+use function in_array;
+
+class AnyOf extends MatcherAbstract
 {
     /**
      * Return a string representation of this Matcher
@@ -19,11 +21,12 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function __toString()
     {
-        return '<AndAnyOthers>';
+        return '<AnyOf>';
     }
 
     /**
-     * Check if the actual value matches the expected.
+     * Check if the actual value does not match the expected (in this
+     * case it's specifically NOT expected).
      *
      * @template TMixed
      *
@@ -33,6 +36,6 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function match(&$actual)
     {
-        return true;
+        return in_array($actual, $this->_expected, true);
     }
 }

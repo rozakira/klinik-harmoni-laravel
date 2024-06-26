@@ -10,21 +10,16 @@
 
 namespace Mockery\Matcher;
 
-class AndAnyOtherArgs extends MatcherAbstract
+use function count;
+
+class NoArgs extends MatcherAbstract implements ArgumentListMatcher
 {
-    /**
-     * Return a string representation of this Matcher
-     *
-     * @return string
-     */
     public function __toString()
     {
-        return '<AndAnyOthers>';
+        return '<No Arguments>';
     }
 
     /**
-     * Check if the actual value matches the expected.
-     *
      * @template TMixed
      *
      * @param TMixed $actual
@@ -33,6 +28,6 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function match(&$actual)
     {
-        return true;
+        return count($actual) === 0;
     }
 }

@@ -10,21 +10,14 @@
 
 namespace Mockery\Matcher;
 
-class AndAnyOtherArgs extends MatcherAbstract
+class AnyArgs extends MatcherAbstract implements ArgumentListMatcher
 {
-    /**
-     * Return a string representation of this Matcher
-     *
-     * @return string
-     */
     public function __toString()
     {
-        return '<AndAnyOthers>';
+        return '<Any Arguments>';
     }
 
     /**
-     * Check if the actual value matches the expected.
-     *
      * @template TMixed
      *
      * @param TMixed $actual

@@ -10,7 +10,7 @@
 
 namespace Mockery\Matcher;
 
-class AndAnyOtherArgs extends MatcherAbstract
+class MultiArgumentClosure extends MatcherAbstract implements ArgumentListMatcher
 {
     /**
      * Return a string representation of this Matcher
@@ -19,11 +19,13 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function __toString()
     {
-        return '<AndAnyOthers>';
+        return '<MultiArgumentClosure===true>';
     }
 
     /**
      * Check if the actual value matches the expected.
+     * Actual passed by reference to preserve reference trail (where applicable)
+     * back to the original method parameter.
      *
      * @template TMixed
      *
@@ -33,6 +35,6 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function match(&$actual)
     {
-        return true;
+        return ($this->_expected)(...$actual) === true;
     }
 }

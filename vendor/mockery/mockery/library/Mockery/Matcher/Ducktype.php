@@ -10,7 +10,11 @@
 
 namespace Mockery\Matcher;
 
-class AndAnyOtherArgs extends MatcherAbstract
+use function implode;
+use function is_object;
+use function method_exists;
+
+class Ducktype extends MatcherAbstract
 {
     /**
      * Return a string representation of this Matcher
@@ -19,7 +23,7 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function __toString()
     {
-        return '<AndAnyOthers>';
+        return '<Ducktype[' . implode(', ', $this->_expected) . ']>';
     }
 
     /**
@@ -33,6 +37,16 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function match(&$actual)
     {
+        if (! is_object($actual)) {
+            return false;
+        }
+
+        foreach ($this->_expected as $method) {
+            if (! method_exists($actual, $method)) {
+                return false;
+            }
+        }
+
         return true;
     }
 }

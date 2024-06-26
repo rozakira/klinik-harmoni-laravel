@@ -10,7 +10,12 @@
 
 namespace Mockery\Matcher;
 
-class AndAnyOtherArgs extends MatcherAbstract
+use function is_object;
+
+/**
+ * @deprecated 2.0 Due to ambiguity, use PHPUnit equivalents
+ */
+class MustBe extends MatcherAbstract
 {
     /**
      * Return a string representation of this Matcher
@@ -19,7 +24,7 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function __toString()
     {
-        return '<AndAnyOthers>';
+        return '<MustBe>';
     }
 
     /**
@@ -33,6 +38,10 @@ class AndAnyOtherArgs extends MatcherAbstract
      */
     public function match(&$actual)
     {
-        return true;
+        if (! is_object($actual)) {
+            return $this->_expected === $actual;
+        }
+
+        return $this->_expected == $actual;
     }
 }
