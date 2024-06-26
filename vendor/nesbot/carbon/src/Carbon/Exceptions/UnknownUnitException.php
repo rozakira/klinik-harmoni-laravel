@@ -13,7 +13,7 @@ namespace Carbon\Exceptions;
 
 use Throwable;
 
-class BadComparisonUnitException extends UnitException
+class UnknownUnitException extends UnitException
 {
     /**
      * The unit.
@@ -33,7 +33,7 @@ class BadComparisonUnitException extends UnitException
     {
         $this->unit = $unit;
 
-        parent::__construct("Bad comparison unit: '$unit'", $code, $previous);
+        parent::__construct("Unknown unit '$unit'.", $code, $previous);
     }
 
     /**

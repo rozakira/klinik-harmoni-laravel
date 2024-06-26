@@ -11,38 +11,38 @@
 
 namespace Carbon\Exceptions;
 
+use RuntimeException as BaseRuntimeException;
 use Throwable;
 
-class BadComparisonUnitException extends UnitException
+class ImmutableException extends BaseRuntimeException implements RuntimeException
 {
     /**
-     * The unit.
+     * The value.
      *
      * @var string
      */
-    protected $unit;
+    protected $value;
 
     /**
      * Constructor.
      *
-     * @param string         $unit
+     * @param string         $value    the immutable type/value
      * @param int            $code
      * @param Throwable|null $previous
      */
-    public function __construct($unit, $code = 0, Throwable $previous = null)
+    public function __construct($value, $code = 0, Throwable $previous = null)
     {
-        $this->unit = $unit;
-
-        parent::__construct("Bad comparison unit: '$unit'", $code, $previous);
+        $this->value = $value;
+        parent::__construct("$value is immutable.", $code, $previous);
     }
 
     /**
-     * Get the unit.
+     * Get the value.
      *
      * @return string
      */
-    public function getUnit(): string
+    public function getValue(): string
     {
-        return $this->unit;
+        return $this->value;
     }
 }
