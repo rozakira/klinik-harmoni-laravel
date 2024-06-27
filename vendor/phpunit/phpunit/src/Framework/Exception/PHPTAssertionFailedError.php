@@ -9,24 +9,24 @@
  */
 namespace PHPUnit\Framework;
 
-use const PHP_EOL;
-
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class ActualValueIsNotAnObjectException extends Exception
+final class PHPTAssertionFailedError extends SyntheticError
 {
-    public function __construct()
+    /**
+     * @var string
+     */
+    private $diff;
+
+    public function __construct(string $message, int $code, string $file, int $line, array $trace, string $diff)
     {
-        parent::__construct(
-            'Actual value is not an object',
-            0,
-            null,
-        );
+        parent::__construct($message, $code, $file, $line, $trace);
+        $this->diff = $diff;
     }
 
-    public function __toString(): string
+    public function getDiff(): string
     {
-        return $this->getMessage() . PHP_EOL;
+        return $this->diff;
     }
 }

@@ -9,24 +9,16 @@
  */
 namespace PHPUnit\Framework;
 
-use const PHP_EOL;
-
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class ActualValueIsNotAnObjectException extends Exception
+final class Error extends Exception implements SelfDescribing
 {
-    public function __construct()
+    /**
+     * Wrapper for getMessage() which is declared as final.
+     */
+    public function toString(): string
     {
-        parent::__construct(
-            'Actual value is not an object',
-            0,
-            null,
-        );
-    }
-
-    public function __toString(): string
-    {
-        return $this->getMessage() . PHP_EOL;
+        return $this->getMessage();
     }
 }

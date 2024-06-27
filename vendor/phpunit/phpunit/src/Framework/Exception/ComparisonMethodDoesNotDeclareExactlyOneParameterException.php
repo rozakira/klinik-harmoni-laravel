@@ -10,16 +10,21 @@
 namespace PHPUnit\Framework;
 
 use const PHP_EOL;
+use function sprintf;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class ActualValueIsNotAnObjectException extends Exception
+final class ComparisonMethodDoesNotDeclareExactlyOneParameterException extends Exception
 {
-    public function __construct()
+    public function __construct(string $className, string $methodName)
     {
         parent::__construct(
-            'Actual value is not an object',
+            sprintf(
+                'Comparison method %s::%s() does not declare exactly one parameter.',
+                $className,
+                $methodName,
+            ),
             0,
             null,
         );
