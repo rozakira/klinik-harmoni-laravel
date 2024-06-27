@@ -9,9 +9,7 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use function is_string;
 use function sprintf;
-use function strpos;
 use function trim;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
@@ -21,7 +19,7 @@ use SebastianBergmann\RecursionContext\InvalidArgumentException;
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class IsEqual extends Constraint
+final class IsEqualWithDelta extends Constraint
 {
     /**
      * @var mixed
@@ -33,22 +31,10 @@ final class IsEqual extends Constraint
      */
     private $delta;
 
-    /**
-     * @var bool
-     */
-    private $canonicalize;
-
-    /**
-     * @var bool
-     */
-    private $ignoreCase;
-
-    public function __construct($value, float $delta = 0.0, bool $canonicalize = false, bool $ignoreCase = false)
+    public function __construct($value, float $delta)
     {
-        $this->value        = $value;
-        $this->delta        = $delta;
-        $this->canonicalize = $canonicalize;
-        $this->ignoreCase   = $ignoreCase;
+        $this->value = $value;
+        $this->delta = $delta;
     }
 
     /**
@@ -84,8 +70,6 @@ final class IsEqual extends Constraint
                 $this->value,
                 $other,
                 $this->delta,
-                $this->canonicalize,
-                $this->ignoreCase,
             );
         } catch (ComparisonFailure $f) {
             if ($returnResult) {
@@ -108,30 +92,10 @@ final class IsEqual extends Constraint
      */
     public function toString(): string
     {
-        $delta = '';
-
-        if (is_string($this->value)) {
-            if (strpos($this->value, "\n") !== false) {
-                return 'is equal to <text>';
-            }
-
-            return sprintf(
-                "is equal to '%s'",
-                $this->value,
-            );
-        }
-
-        if ($this->delta != 0) {
-            $delta = sprintf(
-                ' with delta <%F>',
-                $this->delta,
-            );
-        }
-
         return sprintf(
-            'is equal to %s%s',
+            'is equal to %s with delta <%F>',
             $this->exporter()->export($this->value),
-            $delta,
+            $this->delta,
         );
     }
 }

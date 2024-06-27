@@ -21,34 +21,16 @@ use SebastianBergmann\RecursionContext\InvalidArgumentException;
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class IsEqual extends Constraint
+final class IsEqualIgnoringCase extends Constraint
 {
     /**
      * @var mixed
      */
     private $value;
 
-    /**
-     * @var float
-     */
-    private $delta;
-
-    /**
-     * @var bool
-     */
-    private $canonicalize;
-
-    /**
-     * @var bool
-     */
-    private $ignoreCase;
-
-    public function __construct($value, float $delta = 0.0, bool $canonicalize = false, bool $ignoreCase = false)
+    public function __construct($value)
     {
-        $this->value        = $value;
-        $this->delta        = $delta;
-        $this->canonicalize = $canonicalize;
-        $this->ignoreCase   = $ignoreCase;
+        $this->value = $value;
     }
 
     /**
@@ -83,9 +65,9 @@ final class IsEqual extends Constraint
             $comparator->assertEquals(
                 $this->value,
                 $other,
-                $this->delta,
-                $this->canonicalize,
-                $this->ignoreCase,
+                0.0,
+                false,
+                true,
             );
         } catch (ComparisonFailure $f) {
             if ($returnResult) {
@@ -108,8 +90,6 @@ final class IsEqual extends Constraint
      */
     public function toString(): string
     {
-        $delta = '';
-
         if (is_string($this->value)) {
             if (strpos($this->value, "\n") !== false) {
                 return 'is equal to <text>';
@@ -121,17 +101,9 @@ final class IsEqual extends Constraint
             );
         }
 
-        if ($this->delta != 0) {
-            $delta = sprintf(
-                ' with delta <%F>',
-                $this->delta,
-            );
-        }
-
         return sprintf(
-            'is equal to %s%s',
+            'is equal to %s',
             $this->exporter()->export($this->value),
-            $delta,
         );
     }
 }
