@@ -9,8 +9,8 @@
  */
 namespace SebastianBergmann\Timer;
 
-use Throwable;
+use RuntimeException;
 
-interface Exception extends Throwable
+final class TimeSinceStartOfRequestNotAvailableException extends RuntimeException implements Exception
 {
 }

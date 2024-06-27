@@ -9,8 +9,8 @@
  */
 namespace SebastianBergmann\Timer;
 
-use Throwable;
+use LogicException;
 
-interface Exception extends Throwable
+final class NoActiveTimerException extends LogicException implements Exception
 {
 }
