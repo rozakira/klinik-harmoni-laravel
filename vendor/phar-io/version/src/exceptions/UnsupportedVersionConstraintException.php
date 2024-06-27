@@ -9,7 +9,5 @@
  */
 namespace PharIo\Version;
 
-use Throwable;
-
-interface Exception extends Throwable {
+final class UnsupportedVersionConstraintException extends \RuntimeException implements Exception {
 }
