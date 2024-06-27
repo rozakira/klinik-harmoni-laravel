@@ -16,7 +16,7 @@ use PHPUnit\TextUI\XmlConfiguration\File;
  *
  * @psalm-immutable
  */
-final class Html
+final class Xml
 {
     /**
      * @var File
