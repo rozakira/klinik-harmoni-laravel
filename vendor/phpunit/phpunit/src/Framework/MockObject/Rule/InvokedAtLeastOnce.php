@@ -9,20 +9,34 @@
  */
 namespace PHPUnit\Framework\MockObject\Rule;
 
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class AnyInvokedCount extends InvocationOrder
+final class InvokedAtLeastOnce extends InvocationOrder
 {
     public function toString(): string
     {
-        return 'invoked zero or more times';
+        return 'invoked at least once';
     }
 
+    /**
+     * Verifies that the current expectation is valid. If everything is OK the
+     * code should just return, if not it must throw an exception.
+     *
+     * @throws ExpectationFailedException
+     */
     public function verify(): void
     {
+        $count = $this->getInvocationCount();
+
+        if ($count < 1) {
+            throw new ExpectationFailedException(
+                'Expected invocation at least once but it never occurred.',
+            );
+        }
     }
 
     public function matches(BaseInvocation $invocation): bool

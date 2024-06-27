@@ -14,23 +14,18 @@ use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class AnyInvokedCount extends InvocationOrder
+final class AnyParameters implements ParametersRule
 {
     public function toString(): string
     {
-        return 'invoked zero or more times';
+        return 'with any parameters';
+    }
+
+    public function apply(BaseInvocation $invocation): void
+    {
     }
 
     public function verify(): void
-    {
-    }
-
-    public function matches(BaseInvocation $invocation): bool
-    {
-        return true;
-    }
-
-    protected function invokedDo(BaseInvocation $invocation): void
     {
     }
 }
