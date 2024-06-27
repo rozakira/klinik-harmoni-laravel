@@ -9,8 +9,8 @@
  */
 namespace SebastianBergmann\Template;
 
-use Throwable;
+use InvalidArgumentException;
 
-interface Exception extends Throwable
+final class RuntimeException extends InvalidArgumentException implements Exception
 {
 }
