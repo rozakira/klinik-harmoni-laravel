@@ -18,7 +18,7 @@ namespace PHPUnit\Runner;
  *
  * @see https://github.com/sebastianbergmann/phpunit/issues/4676
  */
-interface AfterIncompleteTestHook extends TestHook
+interface AfterTestWarningHook extends TestHook
 {
-    public function executeAfterIncompleteTest(string $test, string $message, float $time): void;
+    public function executeAfterTestWarning(string $test, string $message, float $time): void;
 }

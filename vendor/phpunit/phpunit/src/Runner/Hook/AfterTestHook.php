@@ -18,7 +18,13 @@ namespace PHPUnit\Runner;
  *
  * @see https://github.com/sebastianbergmann/phpunit/issues/4676
  */
-interface AfterIncompleteTestHook extends TestHook
+interface AfterTestHook extends TestHook
 {
-    public function executeAfterIncompleteTest(string $test, string $message, float $time): void;
+    /**
+     * This hook will fire after any test, regardless of the result.
+     *
+     * For more fine grained control, have a look at the other hooks
+     * that extend PHPUnit\Runner\Hook.
+     */
+    public function executeAfterTest(string $test, float $time): void;
 }
