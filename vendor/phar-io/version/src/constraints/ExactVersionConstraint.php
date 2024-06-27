@@ -9,15 +9,14 @@
  */
 namespace PharIo\Version;
 
-abstract class AbstractVersionConstraint implements VersionConstraint {
-    /** @var string */
-    private $originalValue;
+class ExactVersionConstraint extends AbstractVersionConstraint {
+    public function complies(Version $version): bool {
+        $other = $version->getVersionString();
 
-    public function __construct(string $originalValue) {
-        $this->originalValue = $originalValue;
-    }
+        if ($version->hasBuildMetaData()) {
+            $other .= '+' . $version->getBuildMetaData()->asString();
+        }
 
-    public function asString(): string {
-        return $this->originalValue;
+        return $this->asString() === $other;
     }
 }
