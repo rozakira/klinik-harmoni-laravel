@@ -7,10 +7,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace SebastianBergmann\CodeCoverage;
+namespace SebastianBergmann\CodeCoverage\Driver;
 
 use RuntimeException;
+use SebastianBergmann\CodeCoverage\Exception;
 
-final class BranchAndPathCoverageNotSupportedException extends RuntimeException implements Exception
+final class Xdebug2NotEnabledException extends RuntimeException implements Exception
 {
+    public function __construct()
+    {
+        parent::__construct('xdebug.coverage_enable=On has to be set');
+    }
 }

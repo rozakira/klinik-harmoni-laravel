@@ -11,6 +11,10 @@ namespace SebastianBergmann\CodeCoverage;
 
 use RuntimeException;
 
-final class BranchAndPathCoverageNotSupportedException extends RuntimeException implements Exception
+final class TestIdMissingException extends RuntimeException implements Exception
 {
+    public function __construct()
+    {
+        parent::__construct('Test ID is missing');
+    }
 }

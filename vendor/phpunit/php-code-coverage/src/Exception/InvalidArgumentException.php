@@ -9,8 +9,6 @@
  */
 namespace SebastianBergmann\CodeCoverage;
 
-use RuntimeException;
-
-final class BranchAndPathCoverageNotSupportedException extends RuntimeException implements Exception
+final class InvalidArgumentException extends \InvalidArgumentException implements Exception
 {
 }
