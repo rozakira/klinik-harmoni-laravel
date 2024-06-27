@@ -16,22 +16,12 @@ use PHPUnit\Util\VersionComparisonOperator;
  *
  * @psalm-immutable
  */
-final class TestDirectory
+final class TestFile
 {
     /**
      * @var string
      */
     private $path;
-
-    /**
-     * @var string
-     */
-    private $prefix;
-
-    /**
-     * @var string
-     */
-    private $suffix;
 
     /**
      * @var string
@@ -43,11 +33,9 @@ final class TestDirectory
      */
     private $phpVersionOperator;
 
-    public function __construct(string $path, string $prefix, string $suffix, string $phpVersion, VersionComparisonOperator $phpVersionOperator)
+    public function __construct(string $path, string $phpVersion, VersionComparisonOperator $phpVersionOperator)
     {
         $this->path               = $path;
-        $this->prefix             = $prefix;
-        $this->suffix             = $suffix;
         $this->phpVersion         = $phpVersion;
         $this->phpVersionOperator = $phpVersionOperator;
     }
@@ -55,16 +43,6 @@ final class TestDirectory
     public function path(): string
     {
         return $this->path;
-    }
-
-    public function prefix(): string
-    {
-        return $this->prefix;
-    }
-
-    public function suffix(): string
-    {
-        return $this->suffix;
     }
 
     public function phpVersion(): string
