@@ -9,17 +9,16 @@
  */
 namespace PHPUnit\Framework\MockObject\Builder;
 
+use PHPUnit\Framework\MockObject\Stub\Stub as BaseStub;
+
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-interface Identity
+interface Stub extends Identity
 {
     /**
-     * Sets the identification of the expectation to $id.
-     *
-     * @note The identifier is unique per mock object.
-     *
-     * @param string $id unique identification of expectation
+     * Stubs the matching method with the stub object $stub. Any invocations of
+     * the matched method will now be handled by the stub instead.
      */
-    public function id($id);
+    public function will(BaseStub $stub): Identity;
 }

@@ -9,17 +9,20 @@
  */
 namespace PHPUnit\Framework\MockObject\Builder;
 
+use PHPUnit\Framework\Constraint\Constraint;
+
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-interface Identity
+interface MethodNameMatch extends ParametersMatch
 {
     /**
-     * Sets the identification of the expectation to $id.
+     * Adds a new method name match and returns the parameter match object for
+     * further matching possibilities.
      *
-     * @note The identifier is unique per mock object.
+     * @param Constraint $constraint Constraint for matching method, if a string is passed it will use the PHPUnit_Framework_Constraint_IsEqual
      *
-     * @param string $id unique identification of expectation
+     * @return ParametersMatch
      */
-    public function id($id);
+    public function method($constraint);
 }
