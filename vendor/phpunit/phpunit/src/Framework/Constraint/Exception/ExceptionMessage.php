@@ -9,46 +9,47 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use function get_class;
 use function sprintf;
-use PHPUnit\Util\Filter;
+use function strpos;
 use Throwable;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class Exception extends Constraint
+final class ExceptionMessage extends Constraint
 {
     /**
      * @var string
      */
-    private $className;
+    private $expectedMessage;
 
-    public function __construct(string $className)
+    public function __construct(string $expected)
     {
-        $this->className = $className;
+        $this->expectedMessage = $expected;
     }
 
-    /**
-     * Returns a string representation of the constraint.
-     */
     public function toString(): string
     {
-        return sprintf(
-            'exception of type "%s"',
-            $this->className,
-        );
+        if ($this->expectedMessage === '') {
+            return 'exception message is empty';
+        }
+
+        return 'exception message contains ';
     }
 
     /**
      * Evaluates the constraint for parameter $other. Returns true if the
      * constraint is met, false otherwise.
      *
-     * @param mixed $other value or object to evaluate
+     * @param Throwable $other
      */
     protected function matches($other): bool
     {
-        return $other instanceof $this->className;
+        if ($this->expectedMessage === '') {
+            return $other->getMessage() === '';
+        }
+
+        return strpos((string) $other->getMessage(), $this->expectedMessage) !== false;
     }
 
     /**
@@ -61,25 +62,17 @@ final class Exception extends Constraint
      */
     protected function failureDescription($other): string
     {
-        if ($other !== null) {
-            $message = '';
-
-            if ($other instanceof Throwable) {
-                $message = '. Message was: "' . $other->getMessage() . '" at'
-                    . "\n" . Filter::getFilteredStacktrace($other);
-            }
-
+        if ($this->expectedMessage === '') {
             return sprintf(
-                'exception of type "%s" matches expected exception "%s"%s',
-                get_class($other),
-                $this->className,
-                $message,
+                "exception message is empty but is '%s'",
+                $other->getMessage(),
             );
         }
 
         return sprintf(
-            'exception of type "%s" is thrown',
-            $this->className,
+            "exception message '%s' contains '%s'",
+            $other->getMessage(),
+            $this->expectedMessage,
         );
     }
 }

@@ -9,46 +9,42 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use function get_class;
 use function sprintf;
-use PHPUnit\Util\Filter;
+use SebastianBergmann\RecursionContext\InvalidArgumentException;
 use Throwable;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class Exception extends Constraint
+final class ExceptionCode extends Constraint
 {
     /**
-     * @var string
+     * @var int|string
      */
-    private $className;
-
-    public function __construct(string $className)
-    {
-        $this->className = $className;
-    }
+    private $expectedCode;
 
     /**
-     * Returns a string representation of the constraint.
+     * @param int|string $expected
      */
+    public function __construct($expected)
+    {
+        $this->expectedCode = $expected;
+    }
+
     public function toString(): string
     {
-        return sprintf(
-            'exception of type "%s"',
-            $this->className,
-        );
+        return 'exception code is ';
     }
 
     /**
      * Evaluates the constraint for parameter $other. Returns true if the
      * constraint is met, false otherwise.
      *
-     * @param mixed $other value or object to evaluate
+     * @param Throwable $other
      */
     protected function matches($other): bool
     {
-        return $other instanceof $this->className;
+        return (string) $other->getCode() === (string) $this->expectedCode;
     }
 
     /**
@@ -58,28 +54,15 @@ final class Exception extends Constraint
      * cases. This method should return the second part of that sentence.
      *
      * @param mixed $other evaluated value or object
+     *
+     * @throws InvalidArgumentException
      */
     protected function failureDescription($other): string
     {
-        if ($other !== null) {
-            $message = '';
-
-            if ($other instanceof Throwable) {
-                $message = '. Message was: "' . $other->getMessage() . '" at'
-                    . "\n" . Filter::getFilteredStacktrace($other);
-            }
-
-            return sprintf(
-                'exception of type "%s" matches expected exception "%s"%s',
-                get_class($other),
-                $this->className,
-                $message,
-            );
-        }
-
         return sprintf(
-            'exception of type "%s" is thrown',
-            $this->className,
+            '%s is equal to expected exception code %s',
+            $this->exporter()->export($other->getCode()),
+            $this->exporter()->export($this->expectedCode),
         );
     }
 }

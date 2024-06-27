@@ -9,46 +9,50 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use function get_class;
 use function sprintf;
-use PHPUnit\Util\Filter;
-use Throwable;
+use Exception;
+use PHPUnit\Util\RegularExpression as RegularExpressionUtil;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class Exception extends Constraint
+final class ExceptionMessageRegularExpression extends Constraint
 {
     /**
      * @var string
      */
-    private $className;
+    private $expectedMessageRegExp;
 
-    public function __construct(string $className)
+    public function __construct(string $expected)
     {
-        $this->className = $className;
+        $this->expectedMessageRegExp = $expected;
     }
 
-    /**
-     * Returns a string representation of the constraint.
-     */
     public function toString(): string
     {
-        return sprintf(
-            'exception of type "%s"',
-            $this->className,
-        );
+        return 'exception message matches ';
     }
 
     /**
      * Evaluates the constraint for parameter $other. Returns true if the
      * constraint is met, false otherwise.
      *
-     * @param mixed $other value or object to evaluate
+     * @param \PHPUnit\Framework\Exception $other
+     *
+     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      */
     protected function matches($other): bool
     {
-        return $other instanceof $this->className;
+        $match = RegularExpressionUtil::safeMatch($this->expectedMessageRegExp, $other->getMessage());
+
+        if ($match === false) {
+            throw new \PHPUnit\Framework\Exception(
+                "Invalid expected exception message regex given: '{$this->expectedMessageRegExp}'",
+            );
+        }
+
+        return $match === 1;
     }
 
     /**
@@ -61,25 +65,10 @@ final class Exception extends Constraint
      */
     protected function failureDescription($other): string
     {
-        if ($other !== null) {
-            $message = '';
-
-            if ($other instanceof Throwable) {
-                $message = '. Message was: "' . $other->getMessage() . '" at'
-                    . "\n" . Filter::getFilteredStacktrace($other);
-            }
-
-            return sprintf(
-                'exception of type "%s" matches expected exception "%s"%s',
-                get_class($other),
-                $this->className,
-                $message,
-            );
-        }
-
         return sprintf(
-            'exception of type "%s" is thrown',
-            $this->className,
+            "exception message '%s' matches '%s'",
+            $other->getMessage(),
+            $this->expectedMessageRegExp,
         );
     }
 }
