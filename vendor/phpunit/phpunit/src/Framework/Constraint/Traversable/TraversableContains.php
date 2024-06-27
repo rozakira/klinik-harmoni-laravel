@@ -9,27 +9,24 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use function array_key_exists;
 use function is_array;
-use ArrayAccess;
+
+use function sprintf;
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class ArrayHasKey extends Constraint
+abstract class TraversableContains extends Constraint
 {
     /**
-     * @var int|string
+     * @var mixed
      */
-    private $key;
+    private $value;
 
-    /**
-     * @param int|string $key
-     */
-    public function __construct($key)
+    public function __construct($value)
     {
-        $this->key = $key;
+        $this->value = $value;
     }
 
     /**
@@ -39,26 +36,7 @@ final class ArrayHasKey extends Constraint
      */
     public function toString(): string
     {
-        return 'has the key ' . $this->exporter()->export($this->key);
-    }
-
-    /**
-     * Evaluates the constraint for parameter $other. Returns true if the
-     * constraint is met, false otherwise.
-     *
-     * @param mixed $other value or object to evaluate
-     */
-    protected function matches($other): bool
-    {
-        if (is_array($other)) {
-            return array_key_exists($this->key, $other);
-        }
-
-        if ($other instanceof ArrayAccess) {
-            return $other->offsetExists($this->key);
-        }
-
-        return false;
+        return 'contains ' . $this->exporter()->export($this->value);
     }
 
     /**
@@ -73,6 +51,15 @@ final class ArrayHasKey extends Constraint
      */
     protected function failureDescription($other): string
     {
-        return 'an array ' . $this->toString();
+        return sprintf(
+            '%s %s',
+            is_array($other) ? 'an array' : 'a traversable',
+            $this->toString(),
+        );
+    }
+
+    protected function value()
+    {
+        return $this->value;
     }
 }
