@@ -9,26 +9,26 @@
  */
 namespace PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report;
 
-use PHPUnit\TextUI\XmlConfiguration\File;
+use PHPUnit\TextUI\XmlConfiguration\Directory;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  *
  * @psalm-immutable
  */
-final class Clover
+final class Xml
 {
     /**
-     * @var File
+     * @var Directory
      */
     private $target;
 
-    public function __construct(File $target)
+    public function __construct(Directory $target)
     {
         $this->target = $target;
     }
 
-    public function target(): File
+    public function target(): Directory
     {
         return $this->target;
     }

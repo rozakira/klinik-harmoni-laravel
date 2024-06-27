@@ -16,20 +16,31 @@ use PHPUnit\TextUI\XmlConfiguration\File;
  *
  * @psalm-immutable
  */
-final class Clover
+final class Crap4j
 {
     /**
      * @var File
      */
     private $target;
 
-    public function __construct(File $target)
+    /**
+     * @var int
+     */
+    private $threshold;
+
+    public function __construct(File $target, int $threshold)
     {
-        $this->target = $target;
+        $this->target    = $target;
+        $this->threshold = $threshold;
     }
 
     public function target(): File
     {
         return $this->target;
+    }
+
+    public function threshold(): int
+    {
+        return $this->threshold;
     }
 }

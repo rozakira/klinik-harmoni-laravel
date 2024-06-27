@@ -16,20 +16,42 @@ use PHPUnit\TextUI\XmlConfiguration\File;
  *
  * @psalm-immutable
  */
-final class Clover
+final class Text
 {
     /**
      * @var File
      */
     private $target;
 
-    public function __construct(File $target)
+    /**
+     * @var bool
+     */
+    private $showUncoveredFiles;
+
+    /**
+     * @var bool
+     */
+    private $showOnlySummary;
+
+    public function __construct(File $target, bool $showUncoveredFiles, bool $showOnlySummary)
     {
-        $this->target = $target;
+        $this->target             = $target;
+        $this->showUncoveredFiles = $showUncoveredFiles;
+        $this->showOnlySummary    = $showOnlySummary;
     }
 
     public function target(): File
     {
         return $this->target;
+    }
+
+    public function showUncoveredFiles(): bool
+    {
+        return $this->showUncoveredFiles;
+    }
+
+    public function showOnlySummary(): bool
+    {
+        return $this->showOnlySummary;
     }
 }
