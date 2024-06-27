@@ -14,7 +14,7 @@ namespace PHPUnit\TextUI\XmlConfiguration;
  *
  * @psalm-immutable
  */
-final class Constant
+final class Variable
 {
     /**
      * @var string
@@ -26,10 +26,16 @@ final class Constant
      */
     private $value;
 
-    public function __construct(string $name, $value)
+    /**
+     * @var bool
+     */
+    private $force;
+
+    public function __construct(string $name, $value, bool $force)
     {
         $this->name  = $name;
         $this->value = $value;
+        $this->force = $force;
     }
 
     public function name(): string
@@ -40,5 +46,10 @@ final class Constant
     public function value()
     {
         return $this->value;
+    }
+
+    public function force(): bool
+    {
+        return $this->force;
     }
 }

@@ -14,7 +14,7 @@ namespace PHPUnit\TextUI\XmlConfiguration;
  *
  * @psalm-immutable
  */
-final class Constant
+final class IniSetting
 {
     /**
      * @var string
@@ -22,11 +22,11 @@ final class Constant
     private $name;
 
     /**
-     * @var mixed
+     * @var string
      */
     private $value;
 
-    public function __construct(string $name, $value)
+    public function __construct(string $name, string $value)
     {
         $this->name  = $name;
         $this->value = $value;
@@ -37,7 +37,7 @@ final class Constant
         return $this->name;
     }
 
-    public function value()
+    public function value(): string
     {
         return $this->value;
     }
