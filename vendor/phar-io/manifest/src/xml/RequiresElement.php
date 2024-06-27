@@ -10,16 +10,10 @@
  */
 namespace PharIo\Manifest;
 
-class AuthorElement extends ManifestElement {
-    public function getName(): string {
-        return $this->getAttributeValue('name');
-    }
-
-    public function getEmail(): string {
-        return $this->getAttributeValue('email');
-    }
-
-    public function hasEMail(): bool {
-        return $this->hasAttribute('email');
+class RequiresElement extends ManifestElement {
+    public function getPHPElement(): PhpElement {
+        return new PhpElement(
+            $this->getChildByName('php')
+        );
     }
 }
