@@ -9,11 +9,26 @@
  */
 namespace PHPUnit\Util\Xml;
 
-use RuntimeException;
-
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
+ *
+ * @psalm-immutable
  */
-final class Exception extends RuntimeException implements \PHPUnit\Exception
+abstract class SchemaDetectionResult
 {
+    /**
+     * @psalm-assert-if-true SuccessfulSchemaDetectionResult $this
+     */
+    public function detected(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function version(): string
+    {
+        throw new Exception('No supported schema was detected');
+    }
 }
