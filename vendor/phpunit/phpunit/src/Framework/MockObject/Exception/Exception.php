@@ -9,9 +9,11 @@
  */
 namespace PHPUnit\Framework\MockObject;
 
+use Throwable;
+
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class BadMethodCallException extends \BadMethodCallException implements Exception
+interface Exception extends Throwable
 {
 }

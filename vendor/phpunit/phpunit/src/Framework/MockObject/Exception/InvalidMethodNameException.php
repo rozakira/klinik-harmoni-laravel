@@ -9,9 +9,20 @@
  */
 namespace PHPUnit\Framework\MockObject;
 
+use function sprintf;
+
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class BadMethodCallException extends \BadMethodCallException implements Exception
+final class InvalidMethodNameException extends \PHPUnit\Framework\Exception implements Exception
 {
+    public function __construct(string $method)
+    {
+        parent::__construct(
+            sprintf(
+                'Cannot double method with invalid name "%s"',
+                $method,
+            ),
+        );
+    }
 }

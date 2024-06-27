@@ -9,9 +9,20 @@
  */
 namespace PHPUnit\Framework\MockObject;
 
+use function sprintf;
+
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class BadMethodCallException extends \BadMethodCallException implements Exception
+final class UnknownTraitException extends \PHPUnit\Framework\Exception implements Exception
 {
+    public function __construct(string $traitName)
+    {
+        parent::__construct(
+            sprintf(
+                'Trait "%s" does not exist',
+                $traitName,
+            ),
+        );
+    }
 }
