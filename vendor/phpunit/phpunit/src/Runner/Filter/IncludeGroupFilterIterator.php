@@ -14,10 +14,10 @@ use function in_array;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class ExcludeGroupFilterIterator extends GroupFilterIterator
+final class IncludeGroupFilterIterator extends GroupFilterIterator
 {
     protected function doAccept(string $hash): bool
     {
-        return !in_array($hash, $this->groupTests, true);
+        return in_array($hash, $this->groupTests, true);
     }
 }
