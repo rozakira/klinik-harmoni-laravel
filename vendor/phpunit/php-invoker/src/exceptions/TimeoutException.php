@@ -9,8 +9,8 @@
  */
 namespace SebastianBergmann\Invoker;
 
-use Throwable;
+use RuntimeException;
 
-interface Exception extends Throwable
+final class TimeoutException extends RuntimeException implements Exception
 {
 }
