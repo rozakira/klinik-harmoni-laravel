@@ -9,19 +9,19 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use function is_finite;
+use function is_infinite;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class IsFinite extends Constraint
+final class IsInfinite extends Constraint
 {
     /**
      * Returns a string representation of the constraint.
      */
     public function toString(): string
     {
-        return 'is finite';
+        return 'is infinite';
     }
 
     /**
@@ -32,6 +32,6 @@ final class IsFinite extends Constraint
      */
     protected function matches($other): bool
     {
-        return is_finite($other);
+        return is_infinite($other);
     }
 }
