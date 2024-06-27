@@ -10,8 +10,15 @@
  */
 namespace PharIo\Manifest;
 
-class Application extends Type {
-    public function isApplication(): bool {
-        return true;
+class PhpExtensionRequirement implements Requirement {
+    /** @var string */
+    private $extension;
+
+    public function __construct(string $extension) {
+        $this->extension = $extension;
+    }
+
+    public function asString(): string {
+        return $this->extension;
     }
 }

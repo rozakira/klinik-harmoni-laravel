@@ -10,8 +10,8 @@
  */
 namespace PharIo\Manifest;
 
-class Application extends Type {
-    public function isApplication(): bool {
+class Library extends Type {
+    public function isLibrary(): bool {
         return true;
     }
 }
