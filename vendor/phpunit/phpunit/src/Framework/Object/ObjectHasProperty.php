@@ -10,27 +10,24 @@
 namespace PHPUnit\Framework\Constraint;
 
 use function get_class;
+use function gettype;
 use function is_object;
 use function sprintf;
-use PHPUnit\Framework\Exception;
-use ReflectionClass;
-use ReflectionException;
+use ReflectionObject;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
- *
- * @deprecated https://github.com/sebastianbergmann/phpunit/issues/4601
  */
-class ClassHasAttribute extends Constraint
+final class ObjectHasProperty extends Constraint
 {
     /**
      * @var string
      */
-    private $attributeName;
+    private $propertyName;
 
-    public function __construct(string $attributeName)
+    public function __construct(string $propertyName)
     {
-        $this->attributeName = $attributeName;
+        $this->propertyName = $propertyName;
     }
 
     /**
@@ -39,8 +36,8 @@ class ClassHasAttribute extends Constraint
     public function toString(): string
     {
         return sprintf(
-            'has attribute "%s"',
-            $this->attributeName,
+            'has property "%s"',
+            $this->propertyName,
         );
     }
 
@@ -52,17 +49,11 @@ class ClassHasAttribute extends Constraint
      */
     protected function matches($other): bool
     {
-        try {
-            return (new ReflectionClass($other))->hasProperty($this->attributeName);
-            // @codeCoverageIgnoreStart
-        } catch (ReflectionException $e) {
-            throw new Exception(
-                $e->getMessage(),
-                $e->getCode(),
-                $e,
-            );
+        if (!is_object($other)) {
+            return false;
         }
-        // @codeCoverageIgnoreEnd
+
+        return (new ReflectionObject($other))->hasProperty($this->propertyName);
     }
 
     /**
@@ -75,16 +66,19 @@ class ClassHasAttribute extends Constraint
      */
     protected function failureDescription($other): string
     {
+        if (is_object($other)) {
+            return sprintf(
+                'object of class "%s" %s',
+                get_class($other),
+                $this->toString(),
+            );
+        }
+
         return sprintf(
-            '%sclass "%s" %s',
-            is_object($other) ? 'object of ' : '',
-            is_object($other) ? get_class($other) : $other,
+            '"%s" (%s) %s',
+            $other,
+            gettype($other),
             $this->toString(),
         );
-    }
-
-    protected function attributeName(): string
-    {
-        return $this->attributeName;
     }
 }
