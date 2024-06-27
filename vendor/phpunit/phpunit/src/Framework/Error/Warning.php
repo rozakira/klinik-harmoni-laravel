@@ -12,6 +12,6 @@ namespace PHPUnit\Framework\Error;
 /**
  * @internal
  */
-final class Deprecated extends Error
+final class Warning extends Error
 {
 }
