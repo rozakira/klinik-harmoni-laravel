@@ -14,7 +14,7 @@ namespace PHPUnit\TextUI\XmlConfiguration;
  *
  * @psalm-immutable
  */
-final class Directory
+final class File
 {
     /**
      * @var string
