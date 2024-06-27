@@ -9,11 +9,11 @@
  */
 namespace PHPUnit\TextUI;
 
-use Throwable;
+use RuntimeException;
 
 /**
  * @internal This interface is not covered by the backward compatibility promise for PHPUnit
  */
-interface Exception extends Throwable
+final class ReflectionException extends RuntimeException implements Exception
 {
 }

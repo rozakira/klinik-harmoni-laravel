@@ -9,11 +9,21 @@
  */
 namespace PHPUnit\TextUI;
 
-use Throwable;
+use function sprintf;
+use RuntimeException;
 
 /**
  * @internal This interface is not covered by the backward compatibility promise for PHPUnit
  */
-interface Exception extends Throwable
+final class TestFileNotFoundException extends RuntimeException implements Exception
 {
+    public function __construct(string $path)
+    {
+        parent::__construct(
+            sprintf(
+                'Test file "%s" not found',
+                $path,
+            ),
+        );
+    }
 }
