@@ -9,20 +9,20 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use function is_dir;
+use function is_readable;
 use function sprintf;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class DirectoryExists extends Constraint
+final class IsReadable extends Constraint
 {
     /**
      * Returns a string representation of the constraint.
      */
     public function toString(): string
     {
-        return 'directory exists';
+        return 'is readable';
     }
 
     /**
@@ -33,7 +33,7 @@ final class DirectoryExists extends Constraint
      */
     protected function matches($other): bool
     {
-        return is_dir($other);
+        return is_readable($other);
     }
 
     /**
@@ -47,7 +47,7 @@ final class DirectoryExists extends Constraint
     protected function failureDescription($other): string
     {
         return sprintf(
-            'directory "%s" exists',
+            '"%s" is readable',
             $other,
         );
     }
