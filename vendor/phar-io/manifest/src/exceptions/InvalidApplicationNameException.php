@@ -12,5 +12,6 @@ namespace PharIo\Manifest;
 
 use InvalidArgumentException;
 
-class ElementCollectionException extends InvalidArgumentException implements Exception {
+class InvalidApplicationNameException extends InvalidArgumentException implements Exception {
+    public const InvalidFormat = 2;
 }

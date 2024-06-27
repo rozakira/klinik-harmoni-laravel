@@ -10,7 +10,7 @@
  */
 namespace PharIo\Manifest;
 
-use InvalidArgumentException;
+use Throwable;
 
-class ElementCollectionException extends InvalidArgumentException implements Exception {
+interface Exception extends Throwable {
 }

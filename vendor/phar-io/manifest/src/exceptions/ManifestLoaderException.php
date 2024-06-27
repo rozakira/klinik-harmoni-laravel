@@ -10,7 +10,5 @@
  */
 namespace PharIo\Manifest;
 
-use InvalidArgumentException;
-
-class ElementCollectionException extends InvalidArgumentException implements Exception {
+class ManifestLoaderException extends \Exception implements Exception {
 }

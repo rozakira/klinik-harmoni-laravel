@@ -10,7 +10,7 @@
  */
 namespace PharIo\Manifest;
 
-use InvalidArgumentException;
+use RuntimeException;
 
-class ElementCollectionException extends InvalidArgumentException implements Exception {
+class ManifestElementException extends RuntimeException implements Exception {
 }

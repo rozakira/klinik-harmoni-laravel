@@ -12,5 +12,5 @@ namespace PharIo\Manifest;
 
 use InvalidArgumentException;
 
-class ElementCollectionException extends InvalidArgumentException implements Exception {
+class NoEmailAddressException extends InvalidArgumentException implements Exception {
 }
