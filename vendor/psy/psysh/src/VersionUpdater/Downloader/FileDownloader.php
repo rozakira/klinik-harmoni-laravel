@@ -11,11 +11,9 @@
 
 namespace Psy\VersionUpdater\Downloader;
 
-use Psy\Exception\ErrorException;
-use Psy\Shell;
 use Psy\VersionUpdater\Downloader;
 
-class CurlDownloader implements Downloader
+class FileDownloader implements Downloader
 {
     private $tempDir = null;
     private $outputFile = null;
@@ -39,33 +37,7 @@ class CurlDownloader implements Downloader
 
         $this->outputFile = $targetName;
 
-        $outputHandle = \fopen($this->outputFile, 'w');
-        if (!$outputHandle) {
-            return false;
-        }
-        $curl = \curl_init();
-        \curl_setopt_array($curl, [
-            \CURLOPT_FAILONERROR    => true,
-            \CURLOPT_HEADER         => 0,
-            \CURLOPT_FOLLOWLOCATION => true,
-            \CURLOPT_TIMEOUT        => 10,
-            \CURLOPT_FILE           => $outputHandle,
-            \CURLOPT_HTTPHEADER     => [
-                'User-Agent' => 'PsySH/'.Shell::VERSION,
-            ],
-        ]);
-        \curl_setopt($curl, \CURLOPT_URL, $url);
-        $result = \curl_exec($curl);
-        $error = \curl_error($curl);
-        \curl_close($curl);
-
-        \fclose($outputHandle);
-
-        if (!$result) {
-            throw new ErrorException('cURL Error: '.$error);
-        }
-
-        return (bool) $result;
+        return (bool) \file_put_contents($this->outputFile, \file_get_contents($url));
     }
 
     /** {@inheritDoc} */
