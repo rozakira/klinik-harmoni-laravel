@@ -11,6 +11,6 @@
 
 namespace Symfony\Component\String\Exception;
 
-interface ExceptionInterface extends \Throwable
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
 }
