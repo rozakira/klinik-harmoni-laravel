@@ -16,18 +16,18 @@ use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 /**
- * Yields the default value defined in the action signature when no value has been given.
+ * Yields a non-variadic argument's value from the request attributes.
  *
  * @author Iltar van der Berg <kjarli@gmail.com>
  */
-final class DefaultValueResolver implements ArgumentValueResolverInterface
+final class RequestAttributeValueResolver implements ArgumentValueResolverInterface
 {
     /**
      * {@inheritdoc}
      */
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return $argument->hasDefaultValue() || (null !== $argument->getType() && $argument->isNullable() && !$argument->isVariadic());
+        return !$argument->isVariadic() && $request->attributes->has($argument->getName());
     }
 
     /**
@@ -35,6 +35,6 @@ final class DefaultValueResolver implements ArgumentValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        yield $argument->hasDefaultValue() ? $argument->getDefaultValue() : null;
+        yield $request->attributes->get($argument->getName());
     }
 }
