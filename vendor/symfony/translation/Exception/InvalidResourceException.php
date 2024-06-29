@@ -12,10 +12,10 @@
 namespace Symfony\Component\Translation\Exception;
 
 /**
- * Exception interface for all exceptions thrown by the component.
+ * Thrown when a resource cannot be loaded.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-interface ExceptionInterface extends \Throwable
+class InvalidResourceException extends \InvalidArgumentException implements ExceptionInterface
 {
 }
