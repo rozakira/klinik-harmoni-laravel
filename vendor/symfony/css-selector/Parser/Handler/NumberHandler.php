@@ -12,6 +12,8 @@
 namespace Symfony\Component\CssSelector\Parser\Handler;
 
 use Symfony\Component\CssSelector\Parser\Reader;
+use Symfony\Component\CssSelector\Parser\Token;
+use Symfony\Component\CssSelector\Parser\Tokenizer\TokenizerPatterns;
 use Symfony\Component\CssSelector\Parser\TokenStream;
 
 /**
@@ -24,21 +26,25 @@ use Symfony\Component\CssSelector\Parser\TokenStream;
  *
  * @internal
  */
-class CommentHandler implements HandlerInterface
+class NumberHandler implements HandlerInterface
 {
+    private TokenizerPatterns $patterns;
+
+    public function __construct(TokenizerPatterns $patterns)
+    {
+        $this->patterns = $patterns;
+    }
+
     public function handle(Reader $reader, TokenStream $stream): bool
     {
-        if ('/*' !== $reader->getSubstring(2)) {
+        $match = $reader->findPattern($this->patterns->getNumberPattern());
+
+        if (!$match) {
             return false;
         }
 
-        $offset = $reader->getOffset('*/');
-
-        if (false === $offset) {
-            $reader->moveToEnd();
-        } else {
-            $reader->moveForward($offset + 2);
-        }
+        $stream->push(new Token(Token::TYPE_NUMBER, $match[0], $reader->getPosition()));
+        $reader->moveForward(\strlen($match[0]));
 
         return true;
     }

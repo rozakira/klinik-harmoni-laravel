@@ -12,10 +12,11 @@
 namespace Symfony\Component\CssSelector\Parser\Handler;
 
 use Symfony\Component\CssSelector\Parser\Reader;
+use Symfony\Component\CssSelector\Parser\Token;
 use Symfony\Component\CssSelector\Parser\TokenStream;
 
 /**
- * CSS selector comment handler.
+ * CSS selector whitespace handler.
  *
  * This component is a port of the Python cssselect library,
  * which is copyright Ian Bicking, @see https://github.com/SimonSapin/cssselect.
@@ -24,21 +25,18 @@ use Symfony\Component\CssSelector\Parser\TokenStream;
  *
  * @internal
  */
-class CommentHandler implements HandlerInterface
+class WhitespaceHandler implements HandlerInterface
 {
     public function handle(Reader $reader, TokenStream $stream): bool
     {
-        if ('/*' !== $reader->getSubstring(2)) {
+        $match = $reader->findPattern('~^[ \t\r\n\f]+~');
+
+        if (false === $match) {
             return false;
         }
 
-        $offset = $reader->getOffset('*/');
-
-        if (false === $offset) {
-            $reader->moveToEnd();
-        } else {
-            $reader->moveForward($offset + 2);
-        }
+        $stream->push(new Token(Token::TYPE_WHITESPACE, $match[0], $reader->getPosition()));
+        $reader->moveForward(\strlen($match[0]));
 
         return true;
     }
