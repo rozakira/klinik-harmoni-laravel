@@ -11,7 +11,7 @@
 
 namespace Symfony\Component\ErrorHandler\Error;
 
-class ClassNotFoundError extends \Error
+class UndefinedMethodError extends \Error
 {
     /**
      * {@inheritdoc}
