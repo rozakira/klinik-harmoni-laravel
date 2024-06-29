@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace Ramsey\Collection\Exception;
 
-use Throwable;
+use RuntimeException;
 
-interface CollectionException extends Throwable
+/**
+ * Thrown when attempting to access an element that does not exist.
+ */
+class NoSuchElementException extends RuntimeException implements CollectionException
 {
 }

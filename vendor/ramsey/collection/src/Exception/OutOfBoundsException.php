@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace Ramsey\Collection\Exception;
 
-use Throwable;
+use OutOfBoundsException as PhpOutOfBoundsException;
 
-interface CollectionException extends Throwable
+/**
+ * Thrown when attempting to access an element out of the range of the collection.
+ */
+class OutOfBoundsException extends PhpOutOfBoundsException implements CollectionException
 {
 }

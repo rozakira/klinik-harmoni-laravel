@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace Ramsey\Collection\Exception;
 
-use Throwable;
+use InvalidArgumentException as PhpInvalidArgumentException;
 
-interface CollectionException extends Throwable
+/**
+ * Thrown to indicate an argument is not of the expected type.
+ */
+class InvalidArgumentException extends PhpInvalidArgumentException implements CollectionException
 {
 }

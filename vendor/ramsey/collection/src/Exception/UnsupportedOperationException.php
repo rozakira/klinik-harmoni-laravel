@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace Ramsey\Collection\Exception;
 
-use Throwable;
+use RuntimeException;
 
-interface CollectionException extends Throwable
+/**
+ * Thrown to indicate that the requested operation is not supported.
+ */
+class UnsupportedOperationException extends RuntimeException implements CollectionException
 {
 }

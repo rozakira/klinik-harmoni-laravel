@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace Ramsey\Collection\Exception;
 
-use Throwable;
+use RuntimeException;
 
-interface CollectionException extends Throwable
+/**
+ * Thrown when attempting to operate on collections of differing types.
+ */
+class CollectionMismatchException extends RuntimeException implements CollectionException
 {
 }
