@@ -12,8 +12,8 @@
 namespace Symfony\Component\Finder\Exception;
 
 /**
- * @author Jean-François Simon <jeanfrancois.simon@sensiolabs.com>
+ * @author Andreas Erhard <andreas.erhard@i-med.ac.at>
  */
-class AccessDeniedException extends \UnexpectedValueException
+class DirectoryNotFoundException extends \InvalidArgumentException
 {
 }
