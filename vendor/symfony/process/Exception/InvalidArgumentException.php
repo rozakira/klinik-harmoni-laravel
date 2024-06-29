@@ -12,10 +12,10 @@
 namespace Symfony\Component\Process\Exception;
 
 /**
- * Marker Interface for the Process Component.
+ * InvalidArgumentException for the Process Component.
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Romain Neutron <imprec@gmail.com>
  */
-interface ExceptionInterface extends \Throwable
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
 }
