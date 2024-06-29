@@ -12,7 +12,7 @@
 namespace Symfony\Component\CssSelector\Node;
 
 /**
- * Abstract base node class.
+ * Interface for nodes.
  *
  * This component is a port of the Python cssselect library,
  * which is copyright Ian Bicking, @see https://github.com/SimonSapin/cssselect.
@@ -21,12 +21,9 @@ namespace Symfony\Component\CssSelector\Node;
  *
  * @internal
  */
-abstract class AbstractNode implements NodeInterface
+interface NodeInterface extends \Stringable
 {
-    private string $nodeName;
+    public function getNodeName(): string;
 
-    public function getNodeName(): string
-    {
-        return $this->nodeName ??= preg_replace('~.*\\\\([^\\\\]+)Node$~', '$1', static::class);
-    }
+    public function getSpecificity(): Specificity;
 }
