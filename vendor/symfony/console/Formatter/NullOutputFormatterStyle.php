@@ -14,47 +14,20 @@ namespace Symfony\Component\Console\Formatter;
 /**
  * @author Tien Xuan Vo <tien.xuan.vo@gmail.com>
  */
-final class NullOutputFormatter implements OutputFormatterInterface
+final class NullOutputFormatterStyle implements OutputFormatterStyleInterface
 {
-    private $style;
-
     /**
      * {@inheritdoc}
      */
-    public function format(?string $message): ?string
+    public function apply(string $text): string
     {
-        return null;
+        return $text;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getStyle(string $name): OutputFormatterStyleInterface
-    {
-        // to comply with the interface we must return a OutputFormatterStyleInterface
-        return $this->style ?? $this->style = new NullOutputFormatterStyle();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasStyle(string $name): bool
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isDecorated(): bool
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDecorated(bool $decorated): void
+    public function setBackground(?string $color = null): void
     {
         // do nothing
     }
@@ -62,7 +35,31 @@ final class NullOutputFormatter implements OutputFormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function setStyle(string $name, OutputFormatterStyleInterface $style): void
+    public function setForeground(?string $color = null): void
+    {
+        // do nothing
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOption(string $option): void
+    {
+        // do nothing
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOptions(array $options): void
+    {
+        // do nothing
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unsetOption(string $option): void
     {
         // do nothing
     }
