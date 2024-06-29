@@ -9,8 +9,6 @@
  */
 namespace SebastianBergmann\ObjectReflector;
 
-use Throwable;
-
-interface Exception extends Throwable
+class InvalidArgumentException extends \InvalidArgumentException implements Exception
 {
 }
