@@ -9,8 +9,6 @@
  */
 namespace SebastianBergmann\GlobalState;
 
-use Throwable;
-
-interface Exception extends Throwable
+final class RuntimeException extends \RuntimeException implements Exception
 {
 }
