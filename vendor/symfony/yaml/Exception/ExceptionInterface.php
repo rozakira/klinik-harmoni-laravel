@@ -12,10 +12,10 @@
 namespace Symfony\Component\Yaml\Exception;
 
 /**
- * Exception class thrown when an error occurs during dumping.
+ * Exception interface for all exceptions thrown by the component.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class DumpException extends RuntimeException
+interface ExceptionInterface extends \Throwable
 {
 }
