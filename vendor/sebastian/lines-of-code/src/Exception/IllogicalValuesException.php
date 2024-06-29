@@ -9,8 +9,8 @@
  */
 namespace SebastianBergmann\LinesOfCode;
 
-use Throwable;
+use LogicException;
 
-interface Exception extends Throwable
+final class IllogicalValuesException extends LogicException implements Exception
 {
 }

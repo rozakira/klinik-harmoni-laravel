@@ -9,8 +9,8 @@
  */
 namespace SebastianBergmann\LinesOfCode;
 
-use Throwable;
+use InvalidArgumentException;
 
-interface Exception extends Throwable
+final class NegativeValueException extends InvalidArgumentException implements Exception
 {
 }
