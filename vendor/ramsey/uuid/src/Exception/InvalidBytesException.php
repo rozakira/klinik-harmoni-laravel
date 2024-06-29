@@ -17,8 +17,8 @@ namespace Ramsey\Uuid\Exception;
 use RuntimeException as PhpRuntimeException;
 
 /**
- * Thrown to indicate that no suitable builder could be found
+ * Thrown to indicate that the bytes being operated on are invalid in some way
  */
-class BuilderNotFoundException extends PhpRuntimeException implements UuidExceptionInterface
+class InvalidBytesException extends PhpRuntimeException implements UuidExceptionInterface
 {
 }

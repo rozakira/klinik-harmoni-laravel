@@ -14,11 +14,8 @@ declare(strict_types=1);
 
 namespace Ramsey\Uuid\Exception;
 
-use RuntimeException as PhpRuntimeException;
+use Throwable;
 
-/**
- * Thrown to indicate that no suitable builder could be found
- */
-class BuilderNotFoundException extends PhpRuntimeException implements UuidExceptionInterface
+interface UuidExceptionInterface extends Throwable
 {
 }

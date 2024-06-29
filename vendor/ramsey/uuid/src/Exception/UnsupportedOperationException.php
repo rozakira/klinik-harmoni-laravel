@@ -14,11 +14,11 @@ declare(strict_types=1);
 
 namespace Ramsey\Uuid\Exception;
 
-use RuntimeException as PhpRuntimeException;
+use LogicException as PhpLogicException;
 
 /**
- * Thrown to indicate that no suitable builder could be found
+ * Thrown to indicate that the requested operation is not supported
  */
-class BuilderNotFoundException extends PhpRuntimeException implements UuidExceptionInterface
+class UnsupportedOperationException extends PhpLogicException implements UuidExceptionInterface
 {
 }

@@ -14,11 +14,11 @@ declare(strict_types=1);
 
 namespace Ramsey\Uuid\Exception;
 
-use RuntimeException as PhpRuntimeException;
+use InvalidArgumentException as PhpInvalidArgumentException;
 
 /**
- * Thrown to indicate that no suitable builder could be found
+ * Thrown to indicate that the argument received is not valid
  */
-class BuilderNotFoundException extends PhpRuntimeException implements UuidExceptionInterface
+class InvalidArgumentException extends PhpInvalidArgumentException implements UuidExceptionInterface
 {
 }

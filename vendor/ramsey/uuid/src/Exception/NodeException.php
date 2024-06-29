@@ -17,8 +17,8 @@ namespace Ramsey\Uuid\Exception;
 use RuntimeException as PhpRuntimeException;
 
 /**
- * Thrown to indicate that no suitable builder could be found
+ * Thrown to indicate that attempting to fetch or create a node ID encountered an error
  */
-class BuilderNotFoundException extends PhpRuntimeException implements UuidExceptionInterface
+class NodeException extends PhpRuntimeException implements UuidExceptionInterface
 {
 }

@@ -17,8 +17,9 @@ namespace Ramsey\Uuid\Exception;
 use RuntimeException as PhpRuntimeException;
 
 /**
- * Thrown to indicate that no suitable builder could be found
+ * Thrown to indicate an exception occurred while dealing with DCE Security
+ * (version 2) UUIDs
  */
-class BuilderNotFoundException extends PhpRuntimeException implements UuidExceptionInterface
+class DceSecurityException extends PhpRuntimeException implements UuidExceptionInterface
 {
 }

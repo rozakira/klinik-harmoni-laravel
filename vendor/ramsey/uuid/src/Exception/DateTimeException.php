@@ -17,8 +17,8 @@ namespace Ramsey\Uuid\Exception;
 use RuntimeException as PhpRuntimeException;
 
 /**
- * Thrown to indicate that no suitable builder could be found
+ * Thrown to indicate that the PHP DateTime extension encountered an exception/error
  */
-class BuilderNotFoundException extends PhpRuntimeException implements UuidExceptionInterface
+class DateTimeException extends PhpRuntimeException implements UuidExceptionInterface
 {
 }
