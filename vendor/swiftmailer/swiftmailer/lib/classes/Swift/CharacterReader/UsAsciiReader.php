@@ -9,59 +9,44 @@
  */
 
 /**
- * Provides fixed-width byte sizes for reading fixed-width character sets.
+ * Analyzes US-ASCII characters.
  *
- * @author     Chris Corbyn
- * @author     Xavier De Cock <xdecock@gmail.com>
+ * @author Chris Corbyn
  */
-class Swift_CharacterReader_GenericFixedWidthReader implements Swift_CharacterReader
+class Swift_CharacterReader_UsAsciiReader implements Swift_CharacterReader
 {
-    /**
-     * The number of bytes in a single character.
-     *
-     * @var int
-     */
-    private $width;
-
-    /**
-     * Creates a new GenericFixedWidthReader using $width bytes per character.
-     *
-     * @param int $width
-     */
-    public function __construct($width)
-    {
-        $this->width = $width;
-    }
-
     /**
      * Returns the complete character map.
      *
      * @param string $string
      * @param int    $startOffset
      * @param array  $currentMap
-     * @param mixed  $ignoredChars
+     * @param string $ignoredChars
      *
      * @return int
      */
     public function getCharPositions($string, $startOffset, &$currentMap, &$ignoredChars)
     {
         $strlen = \strlen($string);
-        // % and / are CPU intensive, so, maybe find a better way
-        $ignored = $strlen % $this->width;
-        $ignoredChars = $ignored ? substr($string, -$ignored) : '';
-        $currentMap = $this->width;
+        $ignoredChars = '';
+        for ($i = 0; $i < $strlen; ++$i) {
+            if ($string[$i] > "\x07F") {
+                // Invalid char
+                $currentMap[$i + $startOffset] = $string[$i];
+            }
+        }
 
-        return ($strlen - $ignored) / $this->width;
+        return $strlen;
     }
 
     /**
-     * Returns the mapType.
+     * Returns mapType.
      *
-     * @return int
+     * @return int mapType
      */
     public function getMapType()
     {
-        return self::MAP_TYPE_FIXED_LEN;
+        return self::MAP_TYPE_INVALID;
     }
 
     /**
@@ -69,7 +54,6 @@ class Swift_CharacterReader_GenericFixedWidthReader implements Swift_CharacterRe
      *
      * A positive integer indicates the number of more bytes to fetch before invoking
      * this method again.
-     *
      * A value of zero means this is already a valid character.
      * A value of -1 means this cannot possibly be a valid character.
      *
@@ -80,9 +64,12 @@ class Swift_CharacterReader_GenericFixedWidthReader implements Swift_CharacterRe
      */
     public function validateByteSequence($bytes, $size)
     {
-        $needed = $this->width - $size;
+        $byte = reset($bytes);
+        if (1 == \count($bytes) && $byte >= 0x00 && $byte <= 0x7F) {
+            return 0;
+        }
 
-        return $needed > -1 ? $needed : -1;
+        return -1;
     }
 
     /**
@@ -92,6 +79,6 @@ class Swift_CharacterReader_GenericFixedWidthReader implements Swift_CharacterRe
      */
     public function getInitialByteSize()
     {
-        return $this->width;
+        return 1;
     }
 }
