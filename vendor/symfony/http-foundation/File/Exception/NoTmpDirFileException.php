@@ -12,14 +12,10 @@
 namespace Symfony\Component\HttpFoundation\File\Exception;
 
 /**
- * Thrown when the access on a file was denied.
+ * Thrown when an UPLOAD_ERR_NO_TMP_DIR error occurred with UploadedFile.
  *
- * @author Bernhard Schussek <bschussek@gmail.com>
+ * @author Florent Mata <florentmata@gmail.com>
  */
-class AccessDeniedException extends FileException
+class NoTmpDirFileException extends FileException
 {
-    public function __construct(string $path)
-    {
-        parent::__construct(sprintf('The file %s could not be accessed', $path));
-    }
 }

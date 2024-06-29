@@ -11,15 +11,10 @@
 
 namespace Symfony\Component\HttpFoundation\File\Exception;
 
-/**
- * Thrown when the access on a file was denied.
- *
- * @author Bernhard Schussek <bschussek@gmail.com>
- */
-class AccessDeniedException extends FileException
+class UnexpectedTypeException extends FileException
 {
-    public function __construct(string $path)
+    public function __construct($value, string $expectedType)
     {
-        parent::__construct(sprintf('The file %s could not be accessed', $path));
+        parent::__construct(sprintf('Expected argument of type %s, %s given', $expectedType, get_debug_type($value)));
     }
 }
