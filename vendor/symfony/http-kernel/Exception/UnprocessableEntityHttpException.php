@@ -12,10 +12,9 @@
 namespace Symfony\Component\HttpKernel\Exception;
 
 /**
- * @author Fabien Potencier <fabien@symfony.com>
- * @author Christophe Coevoet <stof@notk.org>
+ * @author Steve Hutchins <hutchinsteve@gmail.com>
  */
-class AccessDeniedHttpException extends HttpException
+class UnprocessableEntityHttpException extends HttpException
 {
     /**
      * @param string|null     $message  The internal exception message
@@ -30,6 +29,6 @@ class AccessDeniedHttpException extends HttpException
             $message = '';
         }
 
-        parent::__construct(403, $message, $previous, $headers, $code);
+        parent::__construct(422, $message, $previous, $headers, $code);
     }
 }

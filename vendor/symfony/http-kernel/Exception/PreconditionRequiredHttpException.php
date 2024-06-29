@@ -12,10 +12,11 @@
 namespace Symfony\Component\HttpKernel\Exception;
 
 /**
- * @author Fabien Potencier <fabien@symfony.com>
- * @author Christophe Coevoet <stof@notk.org>
+ * @author Ben Ramsey <ben@benramsey.com>
+ *
+ * @see http://tools.ietf.org/html/rfc6585
  */
-class AccessDeniedHttpException extends HttpException
+class PreconditionRequiredHttpException extends HttpException
 {
     /**
      * @param string|null     $message  The internal exception message
@@ -30,6 +31,6 @@ class AccessDeniedHttpException extends HttpException
             $message = '';
         }
 
-        parent::__construct(403, $message, $previous, $headers, $code);
+        parent::__construct(428, $message, $previous, $headers, $code);
     }
 }
