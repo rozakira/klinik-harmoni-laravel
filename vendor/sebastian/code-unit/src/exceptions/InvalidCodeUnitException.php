@@ -9,8 +9,8 @@
  */
 namespace SebastianBergmann\CodeUnit;
 
-use Throwable;
+use RuntimeException;
 
-interface Exception extends Throwable
+final class InvalidCodeUnitException extends RuntimeException implements Exception
 {
 }
