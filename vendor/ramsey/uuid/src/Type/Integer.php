@@ -17,53 +17,36 @@ namespace Ramsey\Uuid\Type;
 use Ramsey\Uuid\Exception\InvalidArgumentException;
 use ValueError;
 
+use function assert;
 use function is_numeric;
+use function preg_match;
 use function sprintf;
-use function str_starts_with;
+use function substr;
 
 /**
- * A value object representing a decimal
+ * A value object representing an integer
  *
- * This class exists for type-safety purposes, to ensure that decimals
- * returned from ramsey/uuid methods as strings are truly decimals and not some
+ * This class exists for type-safety purposes, to ensure that integers
+ * returned from ramsey/uuid methods as strings are truly integers and not some
  * other kind of string.
  *
- * To support values as true decimals and not as floats or doubles, we store the
- * decimals as strings.
+ * To support large integers beyond PHP_INT_MAX and PHP_INT_MIN on both 64-bit
+ * and 32-bit systems, we store the integers as strings.
  *
  * @psalm-immutable
  */
-final class Decimal implements NumberInterface
+final class Integer implements NumberInterface
 {
+    /**
+     * @psalm-var numeric-string
+     */
     private string $value;
+
     private bool $isNegative = false;
 
     public function __construct(float | int | string | self $value)
     {
-        $value = (string) $value;
-
-        if (!is_numeric($value)) {
-            throw new InvalidArgumentException(
-                'Value must be a signed decimal or a string containing only '
-                . 'digits 0-9 and, optionally, a decimal point or sign (+ or -)'
-            );
-        }
-
-        // Remove the leading +-symbol.
-        if (str_starts_with($value, '+')) {
-            $value = substr($value, 1);
-        }
-
-        // For cases like `-0` or `-0.0000`, convert the value to `0`.
-        if (abs((float) $value) === 0.0) {
-            $value = '0';
-        }
-
-        if (str_starts_with($value, '-')) {
-            $this->isNegative = true;
-        }
-
-        $this->value = $value;
+        $this->value = $value instanceof self ? (string) $value : $this->prepareValue($value);
     }
 
     public function isNegative(): bool
@@ -71,11 +54,17 @@ final class Decimal implements NumberInterface
         return $this->isNegative;
     }
 
+    /**
+     * @psalm-return numeric-string
+     */
     public function toString(): string
     {
         return $this->value;
     }
 
+    /**
+     * @psalm-return numeric-string
+     */
     public function __toString(): string
     {
         return $this->toString();
@@ -113,8 +102,6 @@ final class Decimal implements NumberInterface
 
     /**
      * @param array{string?: string} $data
-     *
-     * @psalm-suppress UnusedMethodCall
      */
     public function __unserialize(array $data): void
     {
@@ -125,5 +112,47 @@ final class Decimal implements NumberInterface
         // @codeCoverageIgnoreEnd
 
         $this->unserialize($data['string']);
+    }
+
+    /**
+     * @return numeric-string
+     */
+    private function prepareValue(float | int | string $value): string
+    {
+        $value = (string) $value;
+        $sign = '+';
+
+        // If the value contains a sign, remove it for digit pattern check.
+        if (str_starts_with($value, '-') || str_starts_with($value, '+')) {
+            $sign = substr($value, 0, 1);
+            $value = substr($value, 1);
+        }
+
+        if (!preg_match('/^\d+$/', $value)) {
+            throw new InvalidArgumentException(
+                'Value must be a signed integer or a string containing only '
+                . 'digits 0-9 and, optionally, a sign (+ or -)'
+            );
+        }
+
+        // Trim any leading zeros.
+        $value = ltrim($value, '0');
+
+        // Set to zero if the string is empty after trimming zeros.
+        if ($value === '') {
+            $value = '0';
+        }
+
+        // Add the negative sign back to the value.
+        if ($sign === '-' && $value !== '0') {
+            $value = $sign . $value;
+
+            /** @psalm-suppress InaccessibleProperty */
+            $this->isNegative = true;
+        }
+
+        assert(is_numeric($value));
+
+        return $value;
     }
 }
