@@ -12,10 +12,12 @@
 namespace Symfony\Component\Routing\Exception;
 
 /**
- * ExceptionInterface.
+ * The resource was not found.
  *
- * @author Alexandre Salomé <alexandre.salome@gmail.com>
+ * This exception should trigger an HTTP 404 response in your application code.
+ *
+ * @author Kris Wallsmith <kris@symfony.com>
  */
-interface ExceptionInterface extends \Throwable
+class ResourceNotFoundException extends \RuntimeException implements ExceptionInterface
 {
 }

@@ -12,10 +12,10 @@
 namespace Symfony\Component\Routing\Exception;
 
 /**
- * ExceptionInterface.
+ * Exception thrown when a route does not exist.
  *
  * @author Alexandre Salomé <alexandre.salome@gmail.com>
  */
-interface ExceptionInterface extends \Throwable
+class RouteNotFoundException extends \InvalidArgumentException implements ExceptionInterface
 {
 }
