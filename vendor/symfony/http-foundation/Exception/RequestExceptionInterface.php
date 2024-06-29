@@ -12,8 +12,10 @@
 namespace Symfony\Component\HttpFoundation\Exception;
 
 /**
- * Raised when a user sends a malformed request.
+ * Interface for Request exceptions.
+ *
+ * Exceptions implementing this interface should trigger an HTTP 400 response in the application code.
  */
-class BadRequestException extends \UnexpectedValueException implements RequestExceptionInterface
+interface RequestExceptionInterface
 {
 }

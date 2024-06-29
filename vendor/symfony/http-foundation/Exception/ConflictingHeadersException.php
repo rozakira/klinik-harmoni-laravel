@@ -12,8 +12,10 @@
 namespace Symfony\Component\HttpFoundation\Exception;
 
 /**
- * Raised when a user sends a malformed request.
+ * The HTTP request contains headers with conflicting information.
+ *
+ * @author Magnus Nordlander <magnus@fervo.se>
  */
-class BadRequestException extends \UnexpectedValueException implements RequestExceptionInterface
+class ConflictingHeadersException extends \UnexpectedValueException implements RequestExceptionInterface
 {
 }

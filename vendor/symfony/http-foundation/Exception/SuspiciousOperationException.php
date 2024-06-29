@@ -12,8 +12,9 @@
 namespace Symfony\Component\HttpFoundation\Exception;
 
 /**
- * Raised when a user sends a malformed request.
+ * Raised when a user has performed an operation that should be considered
+ * suspicious from a security perspective.
  */
-class BadRequestException extends \UnexpectedValueException implements RequestExceptionInterface
+class SuspiciousOperationException extends \UnexpectedValueException implements RequestExceptionInterface
 {
 }
